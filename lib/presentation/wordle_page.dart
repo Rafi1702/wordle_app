@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tebak_kata/providers/wordle_provider.dart';
 
 class WordlePage extends StatelessWidget {
+  static const route = '/';
   const WordlePage({super.key});
 
   @override
@@ -11,7 +12,7 @@ class WordlePage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Wordle"),
+        title: const Text("Wordle"),
       ),
       body: Consumer<WordleProvider>(
         builder: (context, state, child) => Padding(
@@ -49,12 +50,17 @@ class WordlePage extends StatelessWidget {
             )..add(ElevatedButton(
                 onPressed: state.isValid
                     ? () {
-                        context.read<WordleProvider>().onSubmitButton();
+                        if (state.stageStatus == StageStatus.complete) {
+                          Navigator.of(context)
+                              .popAndPushNamed(WordlePage.route);
+                        } else {
+                          context.read<WordleProvider>().onSubmitButton();
+                        }
                       }
                     : null,
                 child: state.stageStatus == StageStatus.complete
-                    ? Text('Next')
-                    : Text('Submit'),
+                    ? const Text('Next')
+                    : const Text('Submit'),
               )),
           ),
         ),
