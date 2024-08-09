@@ -32,6 +32,7 @@ class WordleProvider with ChangeNotifier {
 
   WordleProvider() {
     initialGuessedWord();
+    print(_guessedWord);
   }
 
   void onWordChanged(String value) {
@@ -51,6 +52,10 @@ class WordleProvider with ChangeNotifier {
   void initialGuessedWord() {
     for (int i = 0; i < word.length; i++) {
       _guessedWord.add([]);
+      for (int j = 0; j < word.length; j++) {
+        _guessedWord[i]
+            .add(const CharacterModels(status: CharacterStatus.notExist));
+      }
     }
     notifyListeners();
   }

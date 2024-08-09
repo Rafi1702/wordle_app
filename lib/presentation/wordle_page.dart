@@ -22,7 +22,6 @@ class WordlePage extends StatelessWidget {
               6,
               (i) {
                 return Flex(
-                  key: ValueKey(i),
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   direction: Axis.horizontal,
                   children: List<Widget>.generate(4, (j) {
@@ -30,7 +29,10 @@ class WordlePage extends StatelessWidget {
                       width: 60.0,
                       height: 60.0,
                       decoration: BoxDecoration(
-                          color: Colors.amber,
+                          color: state.guessedWord[j][0].status ==
+                                  CharacterStatus.notExist
+                              ? Colors.amber
+                              : Colors.green,
                           borderRadius: BorderRadius.circular(8.0)),
                       child: TextField(
                           decoration: const InputDecoration(
@@ -61,14 +63,20 @@ class WordlePage extends StatelessWidget {
     );
   }
 
-  Color? colorHelper(CharacterStatus? status) {
-    switch (status) {
-      case CharacterStatus.exist:
-        return Colors.green;
-      case CharacterStatus.existDifferentIndex:
-        return Colors.yellow;
-      default:
-        return Colors.amber;
-    }
-  }
+  // List<Color> colorHelper(
+  //     int indexAt, List<List<CharacterModels>> list, CharacterStatus? status) {
+  //  var colors = [];
+  //   for (int i = 0; i < list.length; i++) {
+  //     if(list[i][])
+  //     colors[i].add()
+  //   }
+  //   switch (status) {
+  //     case CharacterStatus.exist:
+  //       return Colors.green;
+  //     case CharacterStatus.existDifferentIndex:
+  //       return Colors.yellow;
+  //     default:
+  //       return Colors.amber;
+  //   }
+  // }
 }
