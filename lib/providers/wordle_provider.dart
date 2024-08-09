@@ -30,6 +30,10 @@ class WordleProvider with ChangeNotifier {
 
   int index = 0;
 
+  WordleProvider() {
+    initialGuessedWord();
+  }
+
   void onWordChanged(String value) {
     if (value.isEmpty) {
       _valueHolder = _valueHolder.substring(0, _valueHolder.length - 1);
@@ -44,17 +48,14 @@ class WordleProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // void onWordDeleted(){
-  //   _valueHolder -= val;
-  // }
+  void initialGuessedWord() {
+    for (int i = 0; i < word.length; i++) {
+      _guessedWord.add([]);
+    }
+    notifyListeners();
+  }
 
   void onSubmitButton() {
-    _guessedWord.add([]);
-
-    for (int i = 0; i < word.length; i++) {
-      _guessedWord[index].add(const CharacterModels());
-    }
-
     for (int i = 0; i < _valueHolder.length; i++) {
       _guessedWord[index][i] =
           _guessedWord[index][i].copyWith(character: _valueHolder[i]);

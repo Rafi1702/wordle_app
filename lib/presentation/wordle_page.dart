@@ -30,14 +30,14 @@ class WordlePage extends StatelessWidget {
                       width: 60.0,
                       height: 60.0,
                       decoration: BoxDecoration(
-                          color: state.guessedWord.isNotEmpty && i == 0
-                              ? colorHelper(state.guessedWord[i][j].status)
-                              : Colors.amber,
+                          color: Colors.amber,
                           borderRadius: BorderRadius.circular(8.0)),
                       child: TextField(
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide.none)),
                           textAlign: TextAlign.center,
                           onChanged: (value) {
-                            print(value);
                             // if(value.isEmpty){
 
                             // }
