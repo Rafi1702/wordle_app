@@ -33,6 +33,7 @@ class WordlePage extends StatelessWidget {
                           color: colorHelper(state.guessedWord[i][j].status),
                           borderRadius: BorderRadius.circular(8.0)),
                       child: TextField(
+                          readOnly: state.index != i,
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(
                                   borderSide: BorderSide.none)),

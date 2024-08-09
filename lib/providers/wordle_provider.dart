@@ -86,7 +86,8 @@ class WordleProvider with ChangeNotifier {
       }
     }
 
-    if (isStageCompleted(_guessedWord[index], word, _try)) {
+    if (isStageCompleted(_guessedWord[index], word, _try) ||
+        index == _try - 1) {
       _stageStatus = StageStatus.complete;
     }
 
