@@ -29,10 +29,7 @@ class WordlePage extends StatelessWidget {
                       width: 60.0,
                       height: 60.0,
                       decoration: BoxDecoration(
-                          color: state.guessedWord[j][0].status ==
-                                  CharacterStatus.notExist
-                              ? Colors.amber
-                              : Colors.green,
+                          color: colorHelper(state.guessedWord[i][j].status),
                           borderRadius: BorderRadius.circular(8.0)),
                       child: TextField(
                           decoration: const InputDecoration(
@@ -55,7 +52,9 @@ class WordlePage extends StatelessWidget {
                         context.read<WordleProvider>().onSubmitButton();
                       }
                     : null,
-                child: Text('Submit'),
+                child: state.stageStatus == StageStatus.complete
+                    ? Text('Next')
+                    : Text('Submit'),
               )),
           ),
         ),
@@ -63,20 +62,14 @@ class WordlePage extends StatelessWidget {
     );
   }
 
-  // List<Color> colorHelper(
-  //     int indexAt, List<List<CharacterModels>> list, CharacterStatus? status) {
-  //  var colors = [];
-  //   for (int i = 0; i < list.length; i++) {
-  //     if(list[i][])
-  //     colors[i].add()
-  //   }
-  //   switch (status) {
-  //     case CharacterStatus.exist:
-  //       return Colors.green;
-  //     case CharacterStatus.existDifferentIndex:
-  //       return Colors.yellow;
-  //     default:
-  //       return Colors.amber;
-  //   }
-  // }
+  Color? colorHelper(CharacterStatus? status) {
+    switch (status) {
+      case CharacterStatus.exist:
+        return Colors.green;
+      case CharacterStatus.existDifferentIndex:
+        return Colors.yellow;
+      default:
+        return Colors.amber;
+    }
+  }
 }

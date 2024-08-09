@@ -15,10 +15,17 @@ class CharacterModels {
           status: status ?? this.status);
 }
 
+enum StageStatus { notComplete, complete }
+
 class WordleProvider with ChangeNotifier {
+  final _try = 6;
   String word = "come";
 
   String _valueHolder = "";
+
+  StageStatus _stageStatus = StageStatus.notComplete;
+
+  StageStatus get stageStatus => _stageStatus;
 
   final List<List<CharacterModels>> _guessedWord = [];
 
@@ -32,7 +39,6 @@ class WordleProvider with ChangeNotifier {
 
   WordleProvider() {
     initialGuessedWord();
-    print(_guessedWord);
   }
 
   void onWordChanged(String value) {
@@ -50,7 +56,7 @@ class WordleProvider with ChangeNotifier {
   }
 
   void initialGuessedWord() {
-    for (int i = 0; i < word.length; i++) {
+    for (int i = 0; i < _try; i++) {
       _guessedWord.add([]);
       for (int j = 0; j < word.length; j++) {
         _guessedWord[i]
@@ -80,9 +86,25 @@ class WordleProvider with ChangeNotifier {
       }
     }
 
+    if (isStageCompleted(_guessedWord[index], word, _try)) {
+      _stageStatus = StageStatus.complete;
+    }
+
     _valueHolder = "";
     index++;
 
     notifyListeners();
+  }
+
+  //helper method
+  bool isStageCompleted(List<CharacterModels> words, String word, int tried) {
+    int existCounter = 0;
+    for (int i = 0; i < words.length; i++) {
+      if (words[i].status == CharacterStatus.exist) {
+        existCounter++;
+      }
+    }
+
+    return existCounter == word.length;
   }
 }
