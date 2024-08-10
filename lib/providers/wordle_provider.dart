@@ -23,6 +23,8 @@ class WordleProvider with ChangeNotifier {
 
   String _valueHolder = "";
 
+  String get valueHolder => _valueHolder;
+
   StageStatus _stageStatus = StageStatus.notComplete;
 
   StageStatus get stageStatus => _stageStatus;
@@ -35,24 +37,12 @@ class WordleProvider with ChangeNotifier {
 
   bool get isValid => _isValid;
 
-  int index = 0;
+  int row = 0;
+
+  int column = 0;
 
   WordleProvider() {
     initialGuessedWord();
-  }
-
-  void onWordChanged(String value) {
-    if (value.isEmpty) {
-      _valueHolder = _valueHolder.substring(0, _valueHolder.length - 1);
-      return;
-    }
-    _valueHolder += value;
-
-    if (_valueHolder.length == word.length) {
-      _isValid = true;
-    }
-
-    notifyListeners();
   }
 
   void initialGuessedWord() {
@@ -63,48 +53,66 @@ class WordleProvider with ChangeNotifier {
             .add(const CharacterModels(status: CharacterStatus.notExist));
       }
     }
+
+    notifyListeners();
+  }
+
+  void onWordChanged(String value) {
+    if (column == word.length) {
+      return;
+    }
+    _guessedWord[row][column] =
+        _guessedWord[row][column].copyWith(character: value);
+
+    column += 1;
+
+    if (column == word.length) {
+      _isValid = true;
+      notifyListeners();
+      return;
+    }
+
     notifyListeners();
   }
 
   void onSubmitButton() {
-    for (int i = 0; i < _valueHolder.length; i++) {
-      _guessedWord[index][i] =
-          _guessedWord[index][i].copyWith(character: _valueHolder[i]);
-    }
-
     for (int i = 0; i < word.length; i++) {
-      if (word[i] == _guessedWord[index][i].character) {
-        _guessedWord[index][i] =
-            _guessedWord[index][i].copyWith(status: CharacterStatus.exist);
-      } else if (word.contains(_guessedWord[index][i].character!) &&
-          word[i] != _guessedWord[index][i].character) {
-        _guessedWord[index][i] = _guessedWord[index][i]
+      if (word[i] == _guessedWord[row][i].character) {
+        _guessedWord[row][i] =
+            _guessedWord[row][i].copyWith(status: CharacterStatus.exist);
+      } else if (word.contains(_guessedWord[row][i].character!) &&
+          word[i] != _guessedWord[row][i].character) {
+        _guessedWord[row][i] = _guessedWord[row][i]
             .copyWith(status: CharacterStatus.existDifferentIndex);
       } else {
-        _guessedWord[index][i] =
-            _guessedWord[index][i].copyWith(status: CharacterStatus.notExist);
+        _guessedWord[row][i] =
+            _guessedWord[row][i].copyWith(status: CharacterStatus.notExist);
       }
     }
 
-    if (isStageCompleted(_guessedWord[index], word, _try) ||
-        index == _try - 1) {
+    if (isStageCompleted(_guessedWord[row], word) || row == _try - 1) {
       _stageStatus = StageStatus.complete;
+      _isValid = true;
+    } else {
+      _isValid = false;
     }
 
-    _valueHolder = "";
-    index++;
+    row++;
+    column = 0;
 
     notifyListeners();
   }
 
   //helper method
-  bool isStageCompleted(List<CharacterModels> words, String word, int tried) {
+  bool isStageCompleted(List<CharacterModels> words, String word) {
     int existCounter = 0;
     for (int i = 0; i < words.length; i++) {
       if (words[i].status == CharacterStatus.exist) {
         existCounter++;
       }
     }
+
+    print(existCounter);
 
     return existCounter == word.length;
   }

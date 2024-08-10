@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tebak_kata/helper/qwerty.dart';
 import 'package:tebak_kata/providers/wordle_provider.dart';
 
 class WordlePage extends StatelessWidget {
@@ -32,37 +33,53 @@ class WordlePage extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: colorHelper(state.guessedWord[i][j].status),
                           borderRadius: BorderRadius.circular(8.0)),
-                      child: TextField(
-                          readOnly: state.index != i,
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide.none)),
-                          textAlign: TextAlign.center,
-                          onChanged: (value) {
-                            // if(value.isEmpty){
-
-                            // }
-                            context.read<WordleProvider>().onWordChanged(value);
-                          }),
+                      child: Center(
+                          child: Text(state.guessedWord[i][j].character ?? '')),
                     );
                   }),
                 );
               },
-            )..add(ElevatedButton(
-                onPressed: state.isValid
-                    ? () {
-                        if (state.stageStatus == StageStatus.complete) {
-                          Navigator.of(context)
-                              .popAndPushNamed(WordlePage.route);
-                        } else {
-                          context.read<WordleProvider>().onSubmitButton();
-                        }
-                      }
-                    : null,
-                child: state.stageStatus == StageStatus.complete
-                    ? const Text('Next')
-                    : const Text('Submit'),
-              )),
+            )..addAll(
+                [
+                  ElevatedButton(
+                    onPressed: state.isValid
+                        ? () {
+                            if (state.stageStatus == StageStatus.complete) {
+                              Navigator.of(context)
+                                  .popAndPushNamed(WordlePage.route);
+                            } else {
+                              context.read<WordleProvider>().onSubmitButton();
+                            }
+                          }
+                        : null,
+                    child: state.stageStatus == StageStatus.complete
+                        ? const Text('Next')
+                        : const Text('Submit'),
+                  ),
+                  Wrap(
+                    spacing: 10.0,
+                    runSpacing: 10.0,
+                    children: List.generate(QwertyKey.values.length, (index) {
+                      return InkWell(
+                        onTap: QwertyKey.values[index] == QwertyKey.delete
+                            ? null
+                            : () {
+                                context.read<WordleProvider>().onWordChanged(
+                                    QwertyKey.values[index].name);
+                              },
+                        child: Container(
+                          color: Colors.amber,
+                          height: 30.0,
+                          width: 40.0,
+                          child: Center(
+                            child: Text(QwertyKey.values[index].name),
+                          ),
+                        ),
+                      );
+                    }),
+                  )
+                ],
+              ),
           ),
         ),
       ),
@@ -80,3 +97,18 @@ class WordlePage extends StatelessWidget {
     }
   }
 }
+
+
+// TextField(
+//                           readOnly: state.index != i,
+//                           decoration: const InputDecoration(
+//                               border: OutlineInputBorder(
+//                                   borderSide: BorderSide.none)),
+//                           textAlign: TextAlign.center,
+//                           onChanged: (value) {
+//                             if (value.isEmpty) {
+//                               return;
+//                             }
+//                             context.read<WordleProvider>().onWordChanged(value);
+//                             FocusScope.of(context).nextFocus();
+//                           }),
