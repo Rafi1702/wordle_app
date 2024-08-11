@@ -15,17 +15,13 @@ class CharacterModels {
           status: status ?? this.status);
 }
 
-enum StageStatus { notComplete, complete }
+enum StageStatus { initial, complete }
 
 class WordleProvider with ChangeNotifier {
   final _try = 6;
   String word = "come";
 
-  String _valueHolder = "";
-
-  String get valueHolder => _valueHolder;
-
-  StageStatus _stageStatus = StageStatus.notComplete;
+  StageStatus _stageStatus = StageStatus.initial;
 
   StageStatus get stageStatus => _stageStatus;
 
@@ -103,7 +99,8 @@ class WordleProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  //helper method
+  /* Helper method
+    Check if the character exist same as word length */
   bool isStageCompleted(List<CharacterModels> words, String word) {
     int existCounter = 0;
     for (int i = 0; i < words.length; i++) {

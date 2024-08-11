@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/presentation/wordle_page.dart';
+import 'package:tebak_kata/providers/audio_provider.dart';
 import 'package:tebak_kata/providers/wordle_provider.dart';
 
 void main() {
@@ -13,19 +14,25 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        routes: {
-          WordlePage.route: (context) => ChangeNotifierProvider(
-                create: (BuildContext context) {
-                  return WordleProvider();
-                },
-                child: const WordlePage(),
-              ),
-        });
+    return ChangeNotifierProvider(
+      lazy: false,
+      create: (BuildContext context) {
+        return AudioProvider();
+      },
+      child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            brightness: Brightness.dark,
+            useMaterial3: true,
+          ),
+          routes: {
+            WordlePage.route: (context) => ChangeNotifierProvider(
+                  create: (BuildContext context) {
+                    return WordleProvider();
+                  },
+                  child: const WordlePage(),
+                ),
+          }),
+    );
   }
 }
