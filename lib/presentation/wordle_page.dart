@@ -52,54 +52,214 @@ class WordlePage extends StatelessWidget {
             ),
             state.stageStatus == StageStatus.complete
                 ? ElevatedButton(
+                    style: ButtonStyle(
+                        shape: WidgetStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              4.0,
+                            ),
+                          ),
+                        ),
+                        backgroundColor:
+                            const WidgetStatePropertyAll(Colors.green)),
                     onPressed: () {
                       Navigator.of(context).popAndPushNamed(WordlePage.route);
                     },
                     child: const Text('Next'))
                 : ElevatedButton(
-                    onPressed: state.isValid
-                        ? () {
-                            context.read<WordleProvider>().onSubmitButton();
-                          }
-                        : null,
-                    child: state.stageStatus == StageStatus.complete
-                        ? const Text('Next')
-                        : const Text('Submit'),
-                  ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                runSpacing: 10.0,
-                spacing: 4.0,
-                children: List.generate(QwertyKey.values.length, (index) {
-                  final qwertyKey = QwertyKey.values[index];
-                  return InkWell(
-                    onTap: qwertyKey == QwertyKey.delete
-                        ? null
-                        : () {
-                            // context.read<AudioProvider>().playAudio();
-                            context
-                                .read<WordleProvider>()
-                                .onWordChanged(QwertyKey.values[index].name);
-                          },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: qwertyKey == QwertyKey.delete
-                            ? Colors.red
-                            : AppTheme.gridBoxColor,
-                        borderRadius: BorderRadius.circular(8.0),
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            4.0,
+                          ),
+                        ),
                       ),
-                      height: 43.0,
-                      width: qwertyKey == QwertyKey.delete ? 50.0 : 40.0,
-                      child: Center(
-                        child: Text(QwertyKey.values[index].name),
-                      ),
+                      backgroundColor: state.isValid
+                          ? const WidgetStatePropertyAll(Colors.green)
+                          : null,
                     ),
-                  );
-                }),
-              ),
+                    onPressed: state.isValid
+                        ? () => context.read<WordleProvider>().onSubmitButton()
+                        : null,
+                    child: const Text(
+                      'Submit',
+                    ),
+                  ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _KeyPad(
+                  qwertyKey: QwertyKey.q,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.w,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.e,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.r,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.t,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.y,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.u,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.i,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.o,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.p,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+              ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _KeyPad(
+                  qwertyKey: QwertyKey.a,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.s,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.d,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.f,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.g,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.h,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.j,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.k,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.l,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _KeyPad(
+                  qwertyKey: QwertyKey.z,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.x,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.c,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.v,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.b,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.n,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.m,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+                const SizedBox(width: 4.0),
+                _KeyPad(
+                  qwertyKey: QwertyKey.delete,
+                  onTapped: (val) =>
+                      context.read<WordleProvider>().onWordChanged(val),
+                ),
+              ],
+            )
           ],
         ),
       ),
@@ -115,5 +275,32 @@ class WordlePage extends StatelessWidget {
       default:
         return AppTheme.gridBoxColor;
     }
+  }
+}
+
+class _KeyPad extends StatelessWidget {
+  final QwertyKey qwertyKey;
+  final void Function(String) onTapped;
+  const _KeyPad({required this.qwertyKey, required this.onTapped});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap:
+          qwertyKey == QwertyKey.delete ? null : () => onTapped(qwertyKey.name),
+      child: Container(
+        decoration: BoxDecoration(
+          color: qwertyKey == QwertyKey.delete
+              ? Colors.red
+              : AppTheme.gridBoxColor,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        height: 50.0,
+        width: qwertyKey == QwertyKey.delete ? 50.0 : 33.0,
+        child: Center(
+          child: Text(qwertyKey.name),
+        ),
+      ),
+    );
   }
 }

@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         return AudioProvider();
       },
       child: MaterialApp(
-          title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
           theme: ThemeData(
             brightness: Brightness.dark,
             useMaterial3: true,
