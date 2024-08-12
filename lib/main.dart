@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tebak_kata/presentation/wordle_page.dart';
-import 'package:tebak_kata/providers/audio_provider.dart';
-import 'package:tebak_kata/providers/wordle_provider.dart';
+import 'package:tebak_kata/presentation/wordle/wordle_page.dart';
+import 'package:tebak_kata/global_state/audio_provider.dart';
+import 'package:tebak_kata/presentation/wordle/providers/wordle_provider.dart';
 
 void main() {
   runApp(const MyApp());

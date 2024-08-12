@@ -1,7 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tebak_kata/providers/audio_provider.dart';
+import 'package:tebak_kata/global_state/audio_provider.dart';
 
 class CustomDialog extends StatelessWidget {
   const CustomDialog({

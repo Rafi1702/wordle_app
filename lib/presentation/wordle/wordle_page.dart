@@ -5,7 +5,7 @@ import 'package:tebak_kata/helper/qwerty.dart';
 import 'package:tebak_kata/presentation/widgets/settings_dialog.dart';
 import 'package:tebak_kata/presentation/wordle/widgets/qwerty_keypad.dart';
 
-import 'package:tebak_kata/providers/wordle_provider.dart';
+import 'package:tebak_kata/presentation/wordle/providers/wordle_provider.dart';
 
 class WordlePage extends StatelessWidget {
   static const route = '/';
