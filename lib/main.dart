@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      lazy: false,
+      // lazy: false,
       create: (BuildContext context) {
         return AudioProvider();
       },

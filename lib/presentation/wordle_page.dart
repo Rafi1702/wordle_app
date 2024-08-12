@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
 import 'package:tebak_kata/helper/qwerty.dart';
-import 'package:tebak_kata/providers/audio_provider.dart';
+
 import 'package:tebak_kata/providers/wordle_provider.dart';
 
 class WordlePage extends StatelessWidget {
@@ -78,7 +78,7 @@ class WordlePage extends StatelessWidget {
                     onTap: qwertyKey == QwertyKey.delete
                         ? null
                         : () {
-                            context.read<AudioProvider>().playAudio();
+                            // context.read<AudioProvider>().playAudio();
                             context
                                 .read<WordleProvider>()
                                 .onWordChanged(QwertyKey.values[index].name);

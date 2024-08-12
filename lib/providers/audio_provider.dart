@@ -17,14 +17,14 @@ class AudioProvider with ChangeNotifier {
   double get volume => _volume;
 
   AudioProvider() {
-    playAudio();
-    _player.onPlayerStateChanged.listen((state) {
-      _playerState = state;
-    });
+    // playAudio();
+    // _player.onPlayerStateChanged.listen((state) {
+    //   _playerState = state;
+    // });
 
-    _player.onPlayerComplete.listen((state) {
-      playAudio();
-    });
+    // _player.onPlayerComplete.listen((state) {
+    //   playAudio();
+    // });
   }
 
   @override

@@ -81,16 +81,31 @@ class WordleProvider with ChangeNotifier {
 
   void onSubmitButton() {
     for (int i = 0; i < _word.length; i++) {
-      if (_word[i] == _guessedWord[row][i].character) {
+      if (_word[i] == _guessedWord[row][i].character &&
+          _wordOccurences[_guessedWord[row][i].character] != 0) {
         _guessedWord[row][i] =
             _guessedWord[row][i].copyWith(status: CharacterStatus.exist);
+        _wordOccurences[_guessedWord[row][i].character!] =
+            _wordOccurences[_guessedWord[row][i].character!] - 1;
       } else if (_word.contains(_guessedWord[row][i].character!) &&
-          _word[i] != _guessedWord[row][i].character) {
+          _word[i] != _guessedWord[row][i].character &&
+          _wordOccurences[_guessedWord[row][i].character] != 0) {
         _guessedWord[row][i] = _guessedWord[row][i]
             .copyWith(status: CharacterStatus.existDifferentIndex);
+        _wordOccurences[_guessedWord[row][i].character!] =
+            _wordOccurences[_guessedWord[row][i].character!] - 1;
       } else {
         _guessedWord[row][i] =
             _guessedWord[row][i].copyWith(status: CharacterStatus.notExist);
+      }
+    }
+
+    _wordOccurences.clear();
+    for (int i = 0; i < _word.length; i++) {
+      if (_wordOccurences.containsKey(_word[i])) {
+        _wordOccurences[_word[i]] = _wordOccurences[_word[i]] + 1;
+      } else {
+        _wordOccurences[_word[i]] = 1;
       }
     }
 
