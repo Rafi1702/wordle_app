@@ -17,14 +17,14 @@ class AudioProvider with ChangeNotifier {
   double get volume => _volume;
 
   AudioProvider() {
-    // playAudio();
-    // _player.onPlayerStateChanged.listen((state) {
-    //   _playerState = state;
-    // });
+    playAudio();
+    _player.onPlayerStateChanged.listen((state) {
+      onPlayerStateChanged(state);
+    });
 
-    // _player.onPlayerComplete.listen((state) {
-    //   playAudio();
-    // });
+    _player.onPlayerComplete.listen((state) {
+      playAudio();
+    });
   }
 
   @override
@@ -32,6 +32,11 @@ class AudioProvider with ChangeNotifier {
     // TODO: implement dispose
     _player.dispose();
     super.dispose();
+  }
+
+  void onPlayerStateChanged(PlayerState state) {
+    _playerState = state;
+    notifyListeners();
   }
 
   Future<void> playAudio() async {

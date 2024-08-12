@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
@@ -335,6 +336,15 @@ class CustomDialog extends StatelessWidget {
                     context.read<AudioProvider>().onVolumeChange(_)),
             Text('${audioState.volume}'),
             const SizedBox(height: 15),
+            Checkbox(
+                value: audioState.playerState == PlayerState.paused,
+                onChanged: (_) {
+                  if (audioState.playerState == PlayerState.playing) {
+                    context.read<AudioProvider>().onPauseAudio();
+                  } else {
+                    context.read<AudioProvider>().onResumeAudio();
+                  }
+                })
           ],
         ),
       ),
