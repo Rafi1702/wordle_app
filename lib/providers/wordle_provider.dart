@@ -19,8 +19,8 @@ enum StageStatus { initial, complete }
 
 class WordleProvider with ChangeNotifier {
   final _try = 6;
-  String word = "come";
-
+  final String _word = "come";
+  final Map<String, dynamic> _wordOccurences = {};
   StageStatus _stageStatus = StageStatus.initial;
 
   StageStatus get stageStatus => _stageStatus;
@@ -29,8 +29,8 @@ class WordleProvider with ChangeNotifier {
 
   List<List<CharacterModels>> get guessedWord => _guessedWord;
 
+  //To check if row of guessed word is filled
   bool _isValid = false;
-
   bool get isValid => _isValid;
 
   int row = 0;
@@ -44,9 +44,17 @@ class WordleProvider with ChangeNotifier {
   void initialGuessedWord() {
     for (int i = 0; i < _try; i++) {
       _guessedWord.add([]);
-      for (int j = 0; j < word.length; j++) {
+      for (int j = 0; j < _word.length; j++) {
         _guessedWord[i]
             .add(const CharacterModels(status: CharacterStatus.notExist));
+      }
+    }
+
+    for (int i = 0; i < _word.length; i++) {
+      if (_wordOccurences.containsKey(_word[i])) {
+        _wordOccurences[_word[i]] = _wordOccurences[_word[i]] + 1;
+      } else {
+        _wordOccurences[_word[i]] = 1;
       }
     }
 
@@ -54,7 +62,7 @@ class WordleProvider with ChangeNotifier {
   }
 
   void onWordChanged(String value) {
-    if (column == word.length) {
+    if (column == _word.length) {
       return;
     }
     _guessedWord[row][column] =
@@ -62,7 +70,7 @@ class WordleProvider with ChangeNotifier {
 
     column += 1;
 
-    if (column == word.length) {
+    if (column == _word.length) {
       _isValid = true;
       notifyListeners();
       return;
@@ -72,12 +80,12 @@ class WordleProvider with ChangeNotifier {
   }
 
   void onSubmitButton() {
-    for (int i = 0; i < word.length; i++) {
-      if (word[i] == _guessedWord[row][i].character) {
+    for (int i = 0; i < _word.length; i++) {
+      if (_word[i] == _guessedWord[row][i].character) {
         _guessedWord[row][i] =
             _guessedWord[row][i].copyWith(status: CharacterStatus.exist);
-      } else if (word.contains(_guessedWord[row][i].character!) &&
-          word[i] != _guessedWord[row][i].character) {
+      } else if (_word.contains(_guessedWord[row][i].character!) &&
+          _word[i] != _guessedWord[row][i].character) {
         _guessedWord[row][i] = _guessedWord[row][i]
             .copyWith(status: CharacterStatus.existDifferentIndex);
       } else {
@@ -86,9 +94,8 @@ class WordleProvider with ChangeNotifier {
       }
     }
 
-    if (isStageCompleted(_guessedWord[row], word) || row == _try - 1) {
+    if (isStageCompleted(_guessedWord[row], _word) || row == _try - 1) {
       _stageStatus = StageStatus.complete;
-      _isValid = true;
     } else {
       _isValid = false;
     }
@@ -108,8 +115,6 @@ class WordleProvider with ChangeNotifier {
         existCounter++;
       }
     }
-
-    print(existCounter);
 
     return existCounter == word.length;
   }

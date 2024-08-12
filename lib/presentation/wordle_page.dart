@@ -50,20 +50,22 @@ class WordlePage extends StatelessWidget {
                 );
               },
             ),
-            ElevatedButton(
-              onPressed: state.isValid
-                  ? () {
-                      if (state.stageStatus == StageStatus.complete) {
-                        Navigator.of(context).popAndPushNamed(WordlePage.route);
-                      } else {
-                        context.read<WordleProvider>().onSubmitButton();
-                      }
-                    }
-                  : null,
-              child: state.stageStatus == StageStatus.complete
-                  ? const Text('Next')
-                  : const Text('Submit'),
-            ),
+            state.stageStatus == StageStatus.complete
+                ? ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).popAndPushNamed(WordlePage.route);
+                    },
+                    child: const Text('Next'))
+                : ElevatedButton(
+                    onPressed: state.isValid
+                        ? () {
+                            context.read<WordleProvider>().onSubmitButton();
+                          }
+                        : null,
+                    child: state.stageStatus == StageStatus.complete
+                        ? const Text('Next')
+                        : const Text('Submit'),
+                  ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Wrap(
