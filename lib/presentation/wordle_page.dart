@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
 import 'package:tebak_kata/helper/qwerty.dart';
+import 'package:tebak_kata/providers/audio_provider.dart';
 
 import 'package:tebak_kata/providers/wordle_provider.dart';
 
@@ -11,15 +12,22 @@ class WordlePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final audioState = context.watch<AudioProvider>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 1.0,
-        title: const Text("Wordle"),
+        title: const Text('Wordle'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () {},
+            onPressed: () async {
+              final newVolume = await ReuseDialog.settingDialog(context,audioState.volume);
+              print(newVolume);
+              if (context.mounted && newVolume != null) {
+                context.read<AudioProvider>().onVolumeChange(newVolume);
+              }
+            },
           )
         ],
       ),
@@ -299,6 +307,64 @@ class _KeyPad extends StatelessWidget {
         width: qwertyKey == QwertyKey.delete ? 50.0 : 33.0,
         child: Center(
           child: Text(qwertyKey.name),
+        ),
+      ),
+    );
+  }
+}
+
+class ReuseDialog {
+  static Future<double?> settingDialog(
+      BuildContext context, double volume) async {
+    return showDialog<double>(
+      context: context,
+      builder: (BuildContext context) => CustomDialog(
+        volume: volume,
+      ),
+    );
+  }
+}
+
+class CustomDialog extends StatefulWidget {
+  final double volume;
+  const CustomDialog({
+    super.key,
+    required this.volume,
+  });
+
+  @override
+  State<CustomDialog> createState() => _CustomDialogState();
+}
+
+class _CustomDialogState extends State<CustomDialog> {
+  late double initVolume;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initVolume = widget.volume;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Slider(
+                max: 0.05,
+                label: initVolume.round().toString(),
+                divisions: 5,
+                value: initVolume,
+                onChanged: (double _) => setState(() {
+                      initVolume = _;
+                    })),
+            Text('${widget.volume}'),
+            const SizedBox(height: 15),
+          ],
         ),
       ),
     );

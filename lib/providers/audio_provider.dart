@@ -49,8 +49,8 @@ class AudioProvider with ChangeNotifier {
     await _player.pause();
   }
 
-  Future<void> onVolumeChange() async {
-    _volume += 0.01;
+  Future<void> onVolumeChange(double value) async {
+    _volume += value;
     await _player.setVolume(_volume);
     notifyListeners();
   }
