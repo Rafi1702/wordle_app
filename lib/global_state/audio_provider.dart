@@ -12,7 +12,7 @@ class AudioProvider with ChangeNotifier {
 
   late StreamSubscription playerStateChange;
 
-  double _volume = 0.1;
+  double _volume = 0.05;
 
   double get volume => _volume;
 
@@ -56,6 +56,11 @@ class AudioProvider with ChangeNotifier {
 
   Future<void> onVolumeChange(double value) async {
     _volume = value;
+    if(value == 0.0){
+      _playerState = PlayerState.paused;
+    }else{
+      _playerState = PlayerState.playing;
+    }
     await _player.setVolume(_volume);
     notifyListeners();
   }
