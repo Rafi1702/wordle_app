@@ -20,7 +20,7 @@ enum StageStatus { initial, complete }
 class WordleProvider with ChangeNotifier {
   final _try = 6;
   final String _word = "come";
-  final Map<String, dynamic> _wordOccurences = {};
+  Map<String, dynamic> _wordOccurences = {};
   StageStatus _stageStatus = StageStatus.initial;
 
   StageStatus get stageStatus => _stageStatus;
@@ -50,13 +50,7 @@ class WordleProvider with ChangeNotifier {
       }
     }
 
-    for (int i = 0; i < _word.length; i++) {
-      if (_wordOccurences.containsKey(_word[i])) {
-        _wordOccurences[_word[i]] = _wordOccurences[_word[i]] + 1;
-      } else {
-        _wordOccurences[_word[i]] = 1;
-      }
-    }
+    _wordOccurences = countWordOccurences(_word);
 
     notifyListeners();
   }
@@ -101,14 +95,7 @@ class WordleProvider with ChangeNotifier {
       }
     }
 
-    _wordOccurences.clear();
-    for (int i = 0; i < _word.length; i++) {
-      if (_wordOccurences.containsKey(_word[i])) {
-        _wordOccurences[_word[i]] = _wordOccurences[_word[i]] + 1;
-      } else {
-        _wordOccurences[_word[i]] = 1;
-      }
-    }
+    _wordOccurences = countWordOccurences(_word);
 
     if (isStageCompleted(_guessedWord[row], _word) || row == _try - 1) {
       _stageStatus = StageStatus.complete;
@@ -133,5 +120,17 @@ class WordleProvider with ChangeNotifier {
     }
 
     return existCounter == word.length;
+  }
+
+  Map<String, dynamic> countWordOccurences(String word) {
+    var wordOccurences = <String, dynamic>{};
+    for (int i = 0; i < word.length; i++) {
+      if (wordOccurences.containsKey(word[i])) {
+        wordOccurences[word[i]] = wordOccurences[word[i]] + 1;
+      } else {
+        wordOccurences[word[i]] = 1;
+      }
+    }
+    return wordOccurences;
   }
 }
