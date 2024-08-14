@@ -109,6 +109,17 @@ class WordleProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void onDeleteCharacter() {
+    if (column <= 0) {
+      return;
+    }
+    _guessedWord[row][--column] =
+        const CharacterModels(character: null, status: null);
+    _isValid = false;
+
+    notifyListeners();
+  }
+
   /* Helper method
     Check if the character exist same as word length */
   bool isStageCompleted(List<CharacterModels> words, String word) {

@@ -261,10 +261,10 @@ class WordlePage extends StatelessWidget {
                 ),
                 const SizedBox(width: 4.0),
                 KeyPad(
-                  qwertyKey: QwertyKey.delete,
-                  onTapped: (val) =>
-                      context.read<WordleProvider>().onWordChanged(val),
-                ),
+                    qwertyKey: QwertyKey.delete,
+                    onTapped: (_) {
+                      context.read<WordleProvider>().onDeleteCharacter();
+                    }),
               ],
             )
           ],

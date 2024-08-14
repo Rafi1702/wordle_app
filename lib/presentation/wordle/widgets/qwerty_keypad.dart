@@ -10,8 +10,7 @@ class KeyPad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap:
-          qwertyKey == QwertyKey.delete ? null : () => onTapped(qwertyKey.name),
+      onTap: () => onTapped(qwertyKey.name),
       child: Container(
         decoration: BoxDecoration(
           color: qwertyKey == QwertyKey.delete
