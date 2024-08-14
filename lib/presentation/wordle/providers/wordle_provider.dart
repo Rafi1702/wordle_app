@@ -62,7 +62,8 @@ class WordleProvider with ChangeNotifier {
   }
 
   void onWordChanged(String value) {
-    if (column == _word.length) {
+    int length = _guessedWord[row].length - 1;
+    if (_guessedWord[row][length].character != null) {
       return;
     }
     _guessedWord[row][column] =

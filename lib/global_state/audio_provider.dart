@@ -12,17 +12,17 @@ class AudioProvider with ChangeNotifier {
 
   late StreamSubscription playerStateChange;
 
-  double _volume = 0.05;
+  late double _volume = 0;
 
   double get volume => _volume;
 
   AudioProvider() {
     playAudio();
-    _player.onPlayerStateChanged.listen((state) {
+    playerStateChange = _player.onPlayerStateChanged.listen((state) {
       onPlayerStateChanged(state);
     });
 
-    _player.onPlayerComplete.listen((state) {
+    playerStateChange = _player.onPlayerComplete.listen((state) {
       playAudio();
     });
   }
@@ -30,7 +30,7 @@ class AudioProvider with ChangeNotifier {
   @override
   void dispose() {
     // TODO: implement dispose
-    _player.dispose();
+    // playerStateChange.cancel();
     super.dispose();
   }
 
@@ -56,11 +56,11 @@ class AudioProvider with ChangeNotifier {
 
   Future<void> onVolumeChange(double value) async {
     _volume = value;
-    if(value == 0.0){
-      _playerState = PlayerState.paused;
-    }else{
-      _playerState = PlayerState.playing;
-    }
+    // if (value == 0.0) {
+    //   _playerState = PlayerState.paused;
+    // } else {
+    //   _playerState = PlayerState.playing;
+    // }
     await _player.setVolume(_volume);
     notifyListeners();
   }

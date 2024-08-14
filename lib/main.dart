@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         return AudioProvider();
       },
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
             brightness: Brightness.dark,
             useMaterial3: true,
