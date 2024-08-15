@@ -31,8 +31,7 @@ class CustomDialog extends StatelessWidget {
                 Checkbox(
                     value: audioState.isBgmActive,
                     onChanged: (_) {
-                      print(_);
-                      context.read<AudioProvider>().onBgmCheckBoxTap();
+                      context.read<AudioProvider>().onBgmCheckBoxTap(_!);
                     }),
                 const Text('BGM')
               ],

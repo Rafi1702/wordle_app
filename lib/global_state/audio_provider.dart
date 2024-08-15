@@ -66,12 +66,12 @@ class AudioProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> onBgmCheckBoxTap() async {
-    if (_player.volume == 0) {
-      await _player.setVolume(_volume);
+  Future<void> onBgmCheckBoxTap(bool value) async {
+    if (value) {
+      await _player.setVolume(0);
       _isBgmActive = true;
     } else {
-      await _player.setVolume(0);
+      await _player.setVolume(_volume);
       _isBgmActive = false;
     }
 
