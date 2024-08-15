@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/global_state/audio_provider.dart';
@@ -30,13 +29,10 @@ class CustomDialog extends StatelessWidget {
             Row(
               children: [
                 Checkbox(
-                    value: audioState.playerState == PlayerState.paused,
+                    value: audioState.isBgmActive,
                     onChanged: (_) {
-                      if (audioState.playerState == PlayerState.playing) {
-                        context.read<AudioProvider>().onPauseAudio();
-                      } else {
-                        context.read<AudioProvider>().onResumeAudio();
-                      }
+                      print(_);
+                      context.read<AudioProvider>().onBgmCheckBoxTap();
                     }),
                 const Text('BGM')
               ],

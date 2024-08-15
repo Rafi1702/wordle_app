@@ -8,23 +8,27 @@ class AudioProvider with ChangeNotifier {
 
   PlayerState get playerState => _playerState;
 
+  bool _isBgmActive = true;
+
+  bool get isBgmActive => _isBgmActive;
+
   final AudioPlayer _player = AudioPlayer();
 
   late StreamSubscription playerStateChange;
 
-  late double _volume = 0;
+  late double _volume = 0.05;
 
   double get volume => _volume;
 
   AudioProvider() {
-    playAudio();
-    playerStateChange = _player.onPlayerStateChanged.listen((state) {
-      onPlayerStateChanged(state);
-    });
+    // playAudio();
+    // playerStateChange = _player.onPlayerStateChanged.listen((state) {
+    //   onPlayerStateChanged(state);
+    // });
 
-    playerStateChange = _player.onPlayerComplete.listen((state) {
-      playAudio();
-    });
+    // playerStateChange = _player.onPlayerComplete.listen((state) {
+    //   playAudio();
+    // });
   }
 
   @override
@@ -56,12 +60,24 @@ class AudioProvider with ChangeNotifier {
 
   Future<void> onVolumeChange(double value) async {
     _volume = value;
-    // if (value == 0.0) {
-    //   _playerState = PlayerState.paused;
-    // } else {
-    //   _playerState = PlayerState.playing;
-    // }
+
     await _player.setVolume(_volume);
+
+    print(_player.volume);
+
     notifyListeners();
+  }
+
+  Future<void> onBgmCheckBoxTap() async {
+    if (_player.volume == 0) {
+      await _player.setVolume(_volume);
+      _isBgmActive = true;
+    } else {
+      await _player.setVolume(0);
+      _isBgmActive = false;
+    }
+
+    notifyListeners();
+    print(_player.volume);
   }
 }
