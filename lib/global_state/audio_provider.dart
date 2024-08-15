@@ -63,8 +63,6 @@ class AudioProvider with ChangeNotifier {
 
     await _player.setVolume(_volume);
 
-    print(_player.volume);
-
     notifyListeners();
   }
 
@@ -78,6 +76,5 @@ class AudioProvider with ChangeNotifier {
     }
 
     notifyListeners();
-    print(_player.volume);
   }
 }
