@@ -1,32 +1,21 @@
 import 'package:flutter/material.dart';
-
-enum CharacterStatus { exist, existDifferentIndex, notExist }
-
-class CharacterModels {
-  final String? character;
-
-  final CharacterStatus? status;
-
-  const CharacterModels({this.character, this.status});
-
-  CharacterModels copyWith({String? character, CharacterStatus? status}) =>
-      CharacterModels(
-          character: character ?? this.character,
-          status: status ?? this.status);
-}
+import 'package:tebak_kata/domain/wordle/character_models.dart';
+import 'package:tebak_kata/domain/wordle/word.dart';
 
 enum StageStatus { initial, complete }
 
 class WordleProvider with ChangeNotifier {
-  final _try = 6;
-  final String _word = "come";
-  Map<String, dynamic> _wordOccurences = {};
-  StageStatus _stageStatus = StageStatus.initial;
+  final int _tried = 6;
 
+  int get tried => _tried;
+  final String _word = "come";
+
+  Map<String, dynamic> _wordOccurences = {};
+
+  StageStatus _stageStatus = StageStatus.initial;
   StageStatus get stageStatus => _stageStatus;
 
   final List<List<CharacterModels>> _guessedWord = [];
-
   List<List<CharacterModels>> get guessedWord => _guessedWord;
 
   //To check if row of guessed word is filled
@@ -34,15 +23,14 @@ class WordleProvider with ChangeNotifier {
   bool get isValid => _isValid;
 
   int row = 0;
-
   int column = 0;
 
   WordleProvider() {
     initialGuessedWord();
   }
 
-  void initialGuessedWord() {
-    for (int i = 0; i < _try; i++) {
+  Future<void> initialGuessedWord() async {
+    for (int i = 0; i < _tried; i++) {
       _guessedWord.add([]);
       for (int j = 0; j < _word.length; j++) {
         _guessedWord[i]
@@ -51,6 +39,7 @@ class WordleProvider with ChangeNotifier {
     }
 
     _wordOccurences = countWordOccurences(_word);
+    await WordleRepository().getRandomWord();
 
     notifyListeners();
   }
@@ -97,7 +86,7 @@ class WordleProvider with ChangeNotifier {
 
     _wordOccurences = countWordOccurences(_word);
 
-    if (isStageCompleted(_guessedWord[row], _word) || row == _try - 1) {
+    if (isStageCompleted(_guessedWord[row], _word) || row == _tried - 1) {
       _stageStatus = StageStatus.complete;
     } else {
       _isValid = false;

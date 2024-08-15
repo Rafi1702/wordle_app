@@ -12,26 +12,30 @@ class CustomDialog extends StatelessWidget {
     final audioState = context.watch<AudioProvider>();
     return Dialog(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Slider(
-                max: 0.05,
-                label: (audioState.volume * 1000 * 2).round().toString(),
-                divisions: 5,
-                value: audioState.volume,
-                onChanged: (double _) =>
-                    context.read<AudioProvider>().onVolumeChange(_)),
-            Text('${audioState.volume}'),
+            Text('Music', style: Theme.of(context).textTheme.labelLarge),
+            SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                overlayShape: SliderComponentShape.noOverlay,
+              ),
+              child: Slider(
+                  max: 0.05,
+                  value: audioState.volume,
+                  onChanged: (double _) =>
+                      context.read<AudioProvider>().onVolumeChange(_)),
+            ),
             const SizedBox(height: 15),
             Row(
               children: [
                 Checkbox(
                     value: audioState.isBgmActive,
                     onChanged: (_) {
-                      context.read<AudioProvider>().onBgmCheckBoxTap(_!);
+                      context.read<AudioProvider>().onBgmCheckBoxTap();
                     }),
                 const Text('BGM')
               ],

@@ -16,7 +16,7 @@ class AudioProvider with ChangeNotifier {
 
   late StreamSubscription playerStateChange;
 
-  late double _volume = 0.05;
+  double _volume = 0.05;
 
   double get volume => _volume;
 
@@ -66,13 +66,13 @@ class AudioProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> onBgmCheckBoxTap(bool value) async {
-    if (value) {
-      await _player.setVolume(0);
-      _isBgmActive = true;
-    } else {
+  Future<void> onBgmCheckBoxTap() async {
+    if (_isBgmActive) {
       await _player.setVolume(_volume);
       _isBgmActive = false;
+    } else {
+      await _player.setVolume(0);
+      _isBgmActive = true;
     }
 
     notifyListeners();
