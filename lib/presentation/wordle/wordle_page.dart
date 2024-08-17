@@ -67,43 +67,30 @@ class WordlePage extends StatelessWidget {
                       ),
                     );
                   }),
-              state.stageStatus == StageStatus.complete
-                  ? ElevatedButton(
-                      style: ButtonStyle(
-                          shape: WidgetStatePropertyAll(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                4.0,
-                              ),
-                            ),
-                          ),
-                          backgroundColor:
-                              const WidgetStatePropertyAll(Colors.green)),
-                      onPressed: () {
-                        Navigator.of(context).popAndPushNamed(WordlePage.route);
-                      },
-                      child: const Text('Next'))
-                  : ElevatedButton(
-                      style: ButtonStyle(
-                        shape: WidgetStatePropertyAll(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              4.0,
-                            ),
-                          ),
-                        ),
-                        backgroundColor: state.isValid
-                            ? const WidgetStatePropertyAll(Colors.green)
-                            : null,
-                      ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
                       onPressed: state.isValid
-                          ? () =>
-                              context.read<WordleProvider>().onSubmitButton()
+                          ? () {
+                              if (state.stageStatus == StageStatus.complete) {
+                                Navigator.of(context)
+                                    .popAndPushNamed(WordlePage.route);
+                              } else {
+                                context.read<WordleProvider>().onSubmitButton();
+                              }
+                            }
                           : null,
-                      child: const Text(
-                        'Submit',
-                      ),
-                    ),
+                      child: Text(state.stageStatus == StageStatus.complete
+                          ? 'Next'
+                          : 'Submit')),
+                  ElevatedButton(
+                      onPressed: () {
+                        context.read<WordleProvider>().onHintTextTap();
+                      },
+                      child: Text('Hint Text'))
+                ],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -168,6 +155,7 @@ class WordlePage extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 4.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -226,6 +214,7 @@ class WordlePage extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 4.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

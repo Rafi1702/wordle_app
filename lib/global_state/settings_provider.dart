@@ -3,24 +3,20 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
-class AudioProvider with ChangeNotifier {
+class SettingsProvider with ChangeNotifier {
   PlayerState _playerState = PlayerState.playing;
-
   PlayerState get playerState => _playerState;
 
   bool _isBgmActive = true;
-
   bool get isBgmActive => _isBgmActive;
 
   final AudioPlayer _player = AudioPlayer();
-
   late StreamSubscription playerStateChange;
 
   double _volume = 0.05;
-
   double get volume => _volume;
 
-  AudioProvider() {
+  SettingsProvider() {
     // playAudio();
     // playerStateChange = _player.onPlayerStateChanged.listen((state) {
     //   onPlayerStateChanged(state);

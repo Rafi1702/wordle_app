@@ -9,19 +9,23 @@ class KeyPad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => onTapped(qwertyKey.name),
-      child: Container(
-        decoration: BoxDecoration(
-          color: qwertyKey == QwertyKey.delete
-              ? Colors.red
-              : AppTheme.gridBoxColor,
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        height: 50.0,
-        width: qwertyKey == QwertyKey.delete ? 50.0 : 33.0,
-        child: Center(
-          child: Text(qwertyKey.name),
+    return PhysicalModel(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(8.0),
+      child: GestureDetector(
+        onTap: () => onTapped(qwertyKey.name),
+        child: Container(
+          decoration: BoxDecoration(
+            color: qwertyKey == QwertyKey.delete
+                ? Colors.red
+                : AppTheme.gridBoxColor,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          height: 50.0,
+          width: qwertyKey == QwertyKey.delete ? 50.0 : 33.0,
+          child: Center(
+            child: Text(qwertyKey.name),
+          ),
         ),
       ),
     );

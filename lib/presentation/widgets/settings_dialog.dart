@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tebak_kata/global_state/audio_provider.dart';
+import 'package:tebak_kata/global_state/settings_provider.dart';
 
 class CustomDialog extends StatelessWidget {
   const CustomDialog({
@@ -9,7 +9,7 @@ class CustomDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audioState = context.watch<AudioProvider>();
+    final audioState = context.watch<SettingsProvider>();
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -27,7 +27,7 @@ class CustomDialog extends StatelessWidget {
                   max: 0.05,
                   value: audioState.volume,
                   onChanged: (double _) =>
-                      context.read<AudioProvider>().onVolumeChange(_)),
+                      context.read<SettingsProvider>().onVolumeChange(_)),
             ),
             const SizedBox(height: 15),
             Row(
@@ -35,7 +35,7 @@ class CustomDialog extends StatelessWidget {
                 Checkbox(
                     value: audioState.isBgmActive,
                     onChanged: (_) {
-                      context.read<AudioProvider>().onBgmCheckBoxTap();
+                      context.read<SettingsProvider>().onBgmCheckBoxTap();
                     }),
                 const Text('BGM')
               ],

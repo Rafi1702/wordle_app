@@ -1,10 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:tebak_kata/domain/wordle/character_models.dart';
-import 'package:tebak_kata/domain/wordle/word.dart';
 
 enum StageStatus { initial, complete }
 
 class WordleProvider with ChangeNotifier {
+  final Random _random = Random();
   final int _tried = 6;
 
   int get tried => _tried;
@@ -39,16 +41,17 @@ class WordleProvider with ChangeNotifier {
     }
 
     _wordOccurences = countWordOccurences(_word);
-    await WordleRepository().getRandomWord();
 
     notifyListeners();
   }
 
   void onWordChanged(String value) {
     int length = _guessedWord[row].length - 1;
+
     if (_guessedWord[row][length].character != null) {
       return;
     }
+
     _guessedWord[row][column] =
         _guessedWord[row][column].copyWith(character: value);
 
@@ -92,6 +95,10 @@ class WordleProvider with ChangeNotifier {
       _isValid = false;
     }
 
+    // if (_guessedWord[row][column].character != null) {
+    //   column += 1;
+    //   return;
+    // }
     row++;
     column = 0;
 
@@ -105,6 +112,15 @@ class WordleProvider with ChangeNotifier {
     _guessedWord[row][--column] =
         const CharacterModels(character: null, status: null);
     _isValid = false;
+
+    notifyListeners();
+  }
+
+  void onHintTextTap() {
+    final generate = _random.nextInt(_word.length);
+
+    _guessedWord[_tried - 1][generate] = CharacterModels(
+        character: _word[generate], status: CharacterStatus.exist);
 
     notifyListeners();
   }
@@ -134,3 +150,22 @@ class WordleProvider with ChangeNotifier {
     return wordOccurences;
   }
 }
+
+
+  // Map<String, Map<String, dynamic>> countWordOccurences(String word) {
+  //   var wordOccurences = <String, Map<String, dynamic>>{};
+  //   for (int i = 0; i < word.length; i++) {
+  //     if (wordOccurences.containsKey(word[i])) {
+  //       wordOccurences[word[i]]?["count"] =
+  //           wordOccurences[word[i]]?["count"] + 1;
+  //       wordOccurences[word[i]]
+  //           ?["list"] = List.from(wordOccurences[word[i]]?["list"])..add(i);
+  //     } else {
+  //       wordOccurences[word[i]] = {};
+  //       wordOccurences[word[i]]?["count"] = 1;
+  //       wordOccurences[word[i]]?["list"] = [i];
+  //     }
+  //   }
+
+  //   return wordOccurences;
+  // }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tebak_kata/helper/app_theme.dart';
 import 'package:tebak_kata/presentation/wordle/wordle_page.dart';
-import 'package:tebak_kata/global_state/audio_provider.dart';
+import 'package:tebak_kata/global_state/settings_provider.dart';
 import 'package:tebak_kata/presentation/wordle/providers/wordle_provider.dart';
 
 void main() {
@@ -17,14 +18,11 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       lazy: false,
       create: (BuildContext context) {
-        return AudioProvider();
+        return SettingsProvider();
       },
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            brightness: Brightness.dark,
-            useMaterial3: true,
-          ),
+          theme: AppTheme.darkTheme,
           routes: {
             WordlePage.route: (context) => ChangeNotifierProvider(
                   create: (BuildContext context) {
