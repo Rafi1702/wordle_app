@@ -17,7 +17,7 @@ class SettingsProvider with ChangeNotifier {
   double _volume = 0.05;
   double get volume => _volume;
 
-  ThemeData _selectedTheme = AppTheme.darkTheme;
+  ThemeData _selectedTheme = AppTheme.sakuraTheme;
   ThemeData get selectedTheme => _selectedTheme;
 
   SettingsProvider() {

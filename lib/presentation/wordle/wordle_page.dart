@@ -76,8 +76,10 @@ class WordlePage extends StatelessWidget {
                     );
                   }),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Spacer(
+                    flex: 3,
+                  ),
                   ElevatedButton(
                       onPressed: state.isValid
                           ? () {
@@ -91,6 +93,7 @@ class WordlePage extends StatelessWidget {
                       child: Text(state.stageStatus == StageStatus.complete
                           ? 'Next'
                           : 'Submit')),
+                  const Spacer(),
                   ElevatedButton(
                       onPressed: () {
                         context.read<WordleProvider>().onHintTextTap();
