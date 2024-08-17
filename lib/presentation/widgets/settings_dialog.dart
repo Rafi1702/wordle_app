@@ -46,14 +46,17 @@ class CustomDialog extends StatelessWidget {
             ),
             const SizedBox(height: 10.0),
             Text('Theme', style: Theme.of(context).textTheme.labelLarge),
+            const SizedBox(height: 10.0),
             Row(
               children: [
                 CustomPaint(
                   size: const Size(
-                    40.0,
-                    40.0,
+                    20.0,
+                    20.0,
                   ),
-                  painter: DiagonalSplitCirclePainter(),
+                  painter: DiagonalSplitCirclePainter(
+                      circleColor1: Theme.of(context).colorScheme.primary,
+                      circleColor2: Theme.of(context).colorScheme.secondary),
                 )
               ],
             )
@@ -65,14 +68,18 @@ class CustomDialog extends StatelessWidget {
 }
 
 class DiagonalSplitCirclePainter extends CustomPainter {
+  final Color circleColor1;
+  final Color circleColor2;
+  DiagonalSplitCirclePainter(
+      {required this.circleColor1, required this.circleColor2});
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paintLeft = Paint()
-      ..color = Colors.blue // Warna bagian kiri
+      ..color = circleColor1 // Warna bagian kiri
       ..style = PaintingStyle.fill;
 
     final Paint paintRight = Paint()
-      ..color = Colors.red // Warna bagian kanan
+      ..color = circleColor2 // Warna bagian kanan
       ..style = PaintingStyle.fill;
 
     final double radius = size.width / 2;
@@ -81,16 +88,21 @@ class DiagonalSplitCirclePainter extends CustomPainter {
     // Menggambar bagian kiri lingkaran
     final Path pathLeft = Path()
       ..moveTo(center.dx, center.dy)
-      ..arcTo(Rect.fromCircle(center: center, radius: radius), pi / 4, -pi * 2,
-          false)
+      ..arcTo(
+        Rect.fromCircle(center: center, radius: radius),
+        3 * pi / 4,
+        //semisal targetnya 315, berarti 315 - 3*pi/4
+        pi,
+        false,
+      )
       ..close();
     canvas.drawPath(pathLeft, paintLeft);
 
     // Menggambar bagian kanan lingkaran
     final Path pathRight = Path()
       ..moveTo(center.dx, center.dy)
-      ..arcTo(
-          Rect.fromCircle(center: center, radius: radius), -pi / 4, pi, false)
+      ..arcTo(Rect.fromCircle(center: center, radius: radius), 7 * pi / 4, pi,
+          false)
       ..close();
     canvas.drawPath(pathRight, paintRight);
   }
