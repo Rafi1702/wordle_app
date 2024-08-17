@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/domain/wordle/character_models.dart';
-import 'package:tebak_kata/helper/app_theme.dart';
+
 import 'package:tebak_kata/helper/qwerty.dart';
 import 'package:tebak_kata/presentation/widgets/settings_dialog.dart';
 import 'package:tebak_kata/presentation/wordle/widgets/qwerty_keypad.dart';
@@ -51,17 +51,25 @@ class WordlePage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: List<Widget>.generate(4, (j) {
-                          return Container(
-                            width: 60.0,
+                          return SizedBox(
                             height: 60.0,
-                            decoration: BoxDecoration(
-                                color: colorHelper(
-                                    state.guessedWord[triedIndex][j].status),
-                                borderRadius: BorderRadius.circular(8.0)),
-                            child: Center(
-                                child: Text(state
-                                        .guessedWord[triedIndex][j].character ??
-                                    '')),
+                            width: 60.0,
+                            child: Card(
+                              color: colorHelper(
+                                  state.guessedWord[triedIndex][j].status,
+                                  context),
+                              child: Center(
+                                child: Text(
+                                  state.guessedWord[triedIndex][j].character ??
+                                      '',
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
                           );
                         }),
                       ),
@@ -74,8 +82,7 @@ class WordlePage extends StatelessWidget {
                       onPressed: state.isValid
                           ? () {
                               if (state.stageStatus == StageStatus.complete) {
-                                Navigator.of(context)
-                                    .popAndPushNamed(WordlePage.route);
+                                Navigator.of(context).popAndPushNamed(route);
                               } else {
                                 context.read<WordleProvider>().onSubmitButton();
                               }
@@ -88,7 +95,7 @@ class WordlePage extends StatelessWidget {
                       onPressed: () {
                         context.read<WordleProvider>().onHintTextTap();
                       },
-                      child: Text('Hint Text'))
+                      child: const Text('Hint Text'))
                 ],
               ),
               Row(
@@ -274,14 +281,14 @@ class WordlePage extends StatelessWidget {
     );
   }
 
-  Color? colorHelper(CharacterStatus? status) {
+  Color? colorHelper(CharacterStatus? status, BuildContext context) {
     switch (status) {
       case CharacterStatus.exist:
         return Colors.green;
       case CharacterStatus.existDifferentIndex:
-        return Colors.yellow;
+        return const Color(0xFFFFD700);
       default:
-        return AppTheme.gridBoxColor;
+        return null;
     }
   }
 }

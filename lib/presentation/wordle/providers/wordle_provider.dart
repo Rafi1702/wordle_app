@@ -10,7 +10,7 @@ class WordleProvider with ChangeNotifier {
   final int _tried = 6;
 
   int get tried => _tried;
-  final String _word = "come";
+  final String _word = "COME";
 
   Map<String, dynamic> _wordOccurences = {};
 

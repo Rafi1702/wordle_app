@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tebak_kata/helper/app_theme.dart';
+
 import 'package:tebak_kata/helper/qwerty.dart';
 
 class KeyPad extends StatelessWidget {
@@ -9,22 +9,23 @@ class KeyPad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PhysicalModel(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(8.0),
-      child: GestureDetector(
-        onTap: () => onTapped(qwertyKey.name),
-        child: Container(
-          decoration: BoxDecoration(
-            color: qwertyKey == QwertyKey.delete
-                ? Colors.red
-                : AppTheme.gridBoxColor,
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          height: 50.0,
-          width: qwertyKey == QwertyKey.delete ? 50.0 : 33.0,
-          child: Center(
-            child: Text(qwertyKey.name),
+    return GestureDetector(
+      onTap: () => onTapped(qwertyKey.name.toUpperCase()),
+      child: Container(
+        decoration: BoxDecoration(
+          color: qwertyKey == QwertyKey.delete
+              ? Theme.of(context).colorScheme.secondary
+              : Theme.of(context).colorScheme.primary,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        height: 50.0,
+        width: qwertyKey == QwertyKey.delete ? 50.0 : 33.0,
+        child: Center(
+          child: Text(
+            qwertyKey == QwertyKey.delete
+                ? qwertyKey.name
+                : qwertyKey.name.toUpperCase(),
+            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
           ),
         ),
       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tebak_kata/helper/app_theme.dart';
+
 import 'package:tebak_kata/presentation/wordle/wordle_page.dart';
 import 'package:tebak_kata/global_state/settings_provider.dart';
 import 'package:tebak_kata/presentation/wordle/providers/wordle_provider.dart';
@@ -20,17 +20,20 @@ class MyApp extends StatelessWidget {
       create: (BuildContext context) {
         return SettingsProvider();
       },
-      child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.darkTheme,
-          routes: {
-            WordlePage.route: (context) => ChangeNotifierProvider(
-                  create: (BuildContext context) {
-                    return WordleProvider();
-                  },
-                  child: const WordlePage(),
-                ),
-          }),
+      child: Builder(builder: (context) {
+        final state = context.watch<SettingsProvider>();
+        return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: state.selectedTheme,
+            routes: {
+              WordlePage.route: (context) => ChangeNotifierProvider(
+                    create: (BuildContext context) {
+                      return WordleProvider();
+                    },
+                    child: const WordlePage(),
+                  ),
+            });
+      }),
     );
   }
 }

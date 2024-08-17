@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:tebak_kata/helper/app_theme.dart';
 
 class SettingsProvider with ChangeNotifier {
   PlayerState _playerState = PlayerState.playing;
@@ -15,6 +16,9 @@ class SettingsProvider with ChangeNotifier {
 
   double _volume = 0.05;
   double get volume => _volume;
+
+  ThemeData _selectedTheme = AppTheme.darkTheme;
+  ThemeData get selectedTheme => _selectedTheme;
 
   SettingsProvider() {
     // playAudio();
@@ -70,6 +74,15 @@ class SettingsProvider with ChangeNotifier {
       await _player.setVolume(0);
       _isBgmActive = true;
     }
+
+    notifyListeners();
+  }
+
+  void onThemeChange(ThemeData theme) {
+    if (theme == _selectedTheme) {
+      return;
+    }
+    _selectedTheme = theme;
 
     notifyListeners();
   }
