@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/global_state/settings_provider.dart';
+import 'package:tebak_kata/helper/app_theme.dart';
 
 class CustomDialog extends StatelessWidget {
   const CustomDialog({
@@ -11,7 +12,7 @@ class CustomDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audioState = context.watch<SettingsProvider>();
+    final settingState = context.watch<SettingsProvider>();
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -30,14 +31,14 @@ class CustomDialog extends StatelessWidget {
               ),
               child: Slider(
                   max: 0.05,
-                  value: audioState.volume,
+                  value: settingState.volume,
                   onChanged: (double _) =>
                       context.read<SettingsProvider>().onVolumeChange(_)),
             ),
             Row(
               children: [
                 Checkbox(
-                    value: audioState.isBgmActive,
+                    value: settingState.isBgmActive,
                     onChanged: (_) {
                       context.read<SettingsProvider>().onBgmCheckBoxTap();
                     }),
@@ -49,14 +50,43 @@ class CustomDialog extends StatelessWidget {
             const SizedBox(height: 10.0),
             Row(
               children: [
-                CustomPaint(
-                  size: const Size(
-                    20.0,
-                    20.0,
+                GestureDetector(
+                  onTap: () {
+                    context
+                        .read<SettingsProvider>()
+                        .onThemeChange(AppTheme.sakuraTheme);
+                  },
+                  child: CustomPaint(
+                    size: const Size(
+                      20.0,
+                      20.0,
+                    ),
+                    painter: DiagonalSplitCirclePainter(
+                        circleColor1: AppTheme.sakuraTheme.colorScheme.primary,
+                        circleColor2:
+                            AppTheme.sakuraTheme.colorScheme.secondary,
+                        isSelected:
+                            settingState.selectedTheme == AppTheme.sakuraTheme),
                   ),
-                  painter: DiagonalSplitCirclePainter(
-                      circleColor1: Theme.of(context).colorScheme.primary,
-                      circleColor2: Theme.of(context).colorScheme.secondary),
+                ),
+                const SizedBox(width: 10.0),
+                GestureDetector(
+                  onTap: () {
+                    context
+                        .read<SettingsProvider>()
+                        .onThemeChange(AppTheme.darkTheme);
+                  },
+                  child: CustomPaint(
+                    size: const Size(
+                      20.0,
+                      20.0,
+                    ),
+                    painter: DiagonalSplitCirclePainter(
+                        circleColor1: AppTheme.darkTheme.colorScheme.primary,
+                        circleColor2: AppTheme.darkTheme.colorScheme.surface,
+                        isSelected:
+                            settingState.selectedTheme == AppTheme.darkTheme),
+                  ),
                 )
               ],
             )
@@ -70,8 +100,11 @@ class CustomDialog extends StatelessWidget {
 class DiagonalSplitCirclePainter extends CustomPainter {
   final Color circleColor1;
   final Color circleColor2;
+  final bool isSelected;
   DiagonalSplitCirclePainter(
-      {required this.circleColor1, required this.circleColor2});
+      {required this.circleColor1,
+      required this.circleColor2,
+      required this.isSelected});
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paintLeft = Paint()
@@ -98,6 +131,8 @@ class DiagonalSplitCirclePainter extends CustomPainter {
       ..close();
     canvas.drawPath(pathLeft, paintLeft);
 
+    // canvas.drawPath(pathLeft, borderLeft);
+
     // Menggambar bagian kanan lingkaran
     final Path pathRight = Path()
       ..moveTo(center.dx, center.dy)
@@ -105,6 +140,14 @@ class DiagonalSplitCirclePainter extends CustomPainter {
           false)
       ..close();
     canvas.drawPath(pathRight, paintRight);
+    if (isSelected) {
+      final Paint paintBorder = Paint()
+        ..color = Colors.green
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5;
+
+      canvas.drawCircle(center, radius, paintBorder);
+    }
   }
 
   @override
