@@ -12,85 +12,91 @@ class CustomDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settingState = context.watch<SettingsProvider>();
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text('Settings', style: Theme.of(context).textTheme.titleLarge),
-            const Divider(),
-            const SizedBox(height: 10.0),
-            Text('Music', style: Theme.of(context).textTheme.labelLarge),
-            SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                overlayShape: SliderComponentShape.noOverlay,
-              ),
-              child: Slider(
-                  max: 0.05,
-                  value: settingState.volume,
-                  onChanged: (double _) =>
-                      context.read<SettingsProvider>().onVolumeChange(_)),
-            ),
-            Row(
-              children: [
-                Checkbox(
-                    value: settingState.isBgmActive,
-                    onChanged: (_) {
-                      context.read<SettingsProvider>().onBgmCheckBoxTap();
-                    }),
-                const Text('BGM')
-              ],
-            ),
-            const SizedBox(height: 10.0),
-            Text('Theme', style: Theme.of(context).textTheme.labelLarge),
-            const SizedBox(height: 10.0),
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    context
-                        .read<SettingsProvider>()
-                        .onThemeChange(AppTheme.sakuraTheme);
-                  },
-                  child: CustomPaint(
-                    size: const Size(
-                      20.0,
-                      20.0,
-                    ),
-                    painter: DiagonalSplitCirclePainter(
-                        circleColor1: AppTheme.sakuraTheme.colorScheme.primary,
-                        circleColor2:
-                            AppTheme.sakuraTheme.colorScheme.secondary,
-                        isSelected:
-                            settingState.selectedTheme == AppTheme.sakuraTheme),
+        child: Consumer<SettingsProvider>(
+          builder: (context, settingState, child) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('Settings', style: Theme.of(context).textTheme.titleLarge),
+                const Divider(),
+                const SizedBox(height: 10.0),
+                Text('Music', style: Theme.of(context).textTheme.labelLarge),
+                SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    overlayShape: SliderComponentShape.noOverlay,
                   ),
+                  child: Slider(
+                      max: 0.05,
+                      value: settingState.volume,
+                      onChanged: (double _) =>
+                          context.read<SettingsProvider>().onVolumeChange(_)),
                 ),
-                const SizedBox(width: 10.0),
-                GestureDetector(
-                  onTap: () {
-                    context
-                        .read<SettingsProvider>()
-                        .onThemeChange(AppTheme.darkTheme);
-                  },
-                  child: CustomPaint(
-                    size: const Size(
-                      20.0,
-                      20.0,
+                Row(
+                  children: [
+                    Checkbox(
+                        value: settingState.isBgmActive,
+                        onChanged: (_) {
+                          context.read<SettingsProvider>().onBgmCheckBoxTap();
+                        }),
+                    const Text('BGM')
+                  ],
+                ),
+                const SizedBox(height: 10.0),
+                Text('Theme', style: Theme.of(context).textTheme.labelLarge),
+                const SizedBox(height: 10.0),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        context
+                            .read<SettingsProvider>()
+                            .onThemeChange(AppTheme.sakuraTheme);
+                      },
+                      child: CustomPaint(
+                        size: const Size(
+                          20.0,
+                          20.0,
+                        ),
+                        painter: DiagonalSplitCirclePainter(
+                            circleColor1:
+                                AppTheme.sakuraTheme.colorScheme.primary,
+                            circleColor2:
+                                AppTheme.sakuraTheme.colorScheme.secondary,
+                            isSelected: settingState.selectedTheme ==
+                                AppTheme.sakuraTheme),
+                      ),
                     ),
-                    painter: DiagonalSplitCirclePainter(
-                        circleColor1: AppTheme.darkTheme.colorScheme.primary,
-                        circleColor2: AppTheme.darkTheme.colorScheme.surface,
-                        isSelected:
-                            settingState.selectedTheme == AppTheme.darkTheme),
-                  ),
+                    const SizedBox(width: 10.0),
+                    GestureDetector(
+                      onTap: () {
+                        context
+                            .read<SettingsProvider>()
+                            .onThemeChange(AppTheme.darkTheme);
+                      },
+                      child: CustomPaint(
+                        size: const Size(
+                          20.0,
+                          20.0,
+                        ),
+                        painter: DiagonalSplitCirclePainter(
+                            circleColor1:
+                                AppTheme.darkTheme.colorScheme.primary,
+                            circleColor2:
+                                AppTheme.darkTheme.colorScheme.surface,
+                            isSelected: settingState.selectedTheme ==
+                                AppTheme.darkTheme),
+                      ),
+                    )
+                  ],
                 )
               ],
-            )
-          ],
+            );
+          },
         ),
       ),
     );
