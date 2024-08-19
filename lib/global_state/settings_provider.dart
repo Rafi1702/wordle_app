@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:tebak_kata/data/audio_local_storage.dart';
 import 'package:tebak_kata/data/theme_local_storage.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
 
 class SettingsProvider with ChangeNotifier {
   final ThemeLocalStorage themeLocal;
+  final AudioLocalStorage audioLocal;
 
   PlayerState _playerState = PlayerState.playing;
   PlayerState get playerState => _playerState;
@@ -23,8 +25,9 @@ class SettingsProvider with ChangeNotifier {
   Themes _selectedTheme = Themes.sakuraTheme;
   Themes get selectedTheme => _selectedTheme;
 
-  SettingsProvider({required this.themeLocal}) {
+  SettingsProvider({required this.themeLocal, required this.audioLocal}) {
     onInitialTheme();
+    onInitialAudio();
     // playAudio();
     // playerStateChange = _player.onPlayerStateChanged.listen((state) {
     //   onPlayerStateChanged(state);
@@ -67,6 +70,8 @@ class SettingsProvider with ChangeNotifier {
 
     await _player.setVolume(_volume);
 
+    await audioLocal.setVolume(_volume);
+
     notifyListeners();
   }
 
@@ -78,15 +83,27 @@ class SettingsProvider with ChangeNotifier {
       await _player.setVolume(0);
       _isBgmActive = true;
     }
+    audioLocal.setBgmValue(_isBgmActive);
 
     notifyListeners();
   }
 
-  void onInitialTheme(){
+  void onInitialAudio() {
+    final volumeValue = audioLocal.getVolume();
+    final isBgmMute = audioLocal.getBgmValue();
+
+    _volume = volumeValue;
+    _isBgmActive = isBgmMute;
+
+    notifyListeners();
+  }
+
+  void onInitialTheme() {
     final int themeIndex = themeLocal.getlocalTheme();
     _selectedTheme = Themes.values[themeIndex];
     notifyListeners();
   }
+
   Future<void> onThemeChange(Themes theme) async {
     if (theme == _selectedTheme) {
       return;

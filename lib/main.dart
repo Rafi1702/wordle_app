@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tebak_kata/data/audio_local_storage.dart';
 import 'package:tebak_kata/data/theme_local_storage.dart';
 import 'package:tebak_kata/data/wordle_repository.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
@@ -9,13 +10,15 @@ import 'package:tebak_kata/presentation/wordle/wordle_page.dart';
 import 'package:tebak_kata/global_state/settings_provider.dart';
 import 'package:tebak_kata/presentation/wordle/providers/wordle_provider.dart';
 
-const key = "__theme__";
+const themeKey = "__theme__";
+const volumeKey = "___volume___";
+const bgmKey = "___bgm___";
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final SharedPreferencesWithCache prefsWithCache =
       await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(
-      allowList: <String>{key},
+      allowList: <String>{themeKey, volumeKey, bgmKey},
     ),
   );
 
@@ -27,8 +30,12 @@ void main() async {
         ),
         Provider(
           create: (context) =>
-              ThemeLocalStorage(pref: prefsWithCache, key: key),
-        )
+              ThemeLocalStorage(pref: prefsWithCache, key: themeKey),
+        ),
+        Provider(
+          create: (context) => AudioLocalStorage(
+              pref: prefsWithCache, volumeKey: volumeKey, bgmKey: bgmKey),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -44,7 +51,10 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       lazy: false,
       create: (BuildContext context) {
-        return SettingsProvider(themeLocal: context.read<ThemeLocalStorage>());
+        return SettingsProvider(
+          themeLocal: context.read<ThemeLocalStorage>(),
+          audioLocal: context.read<AudioLocalStorage>(),
+        );
       },
       child: Builder(builder: (context) {
         final state = context.watch<SettingsProvider>();
