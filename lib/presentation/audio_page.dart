@@ -25,7 +25,7 @@ class AudioPage extends StatelessWidget {
                 value: volume,
                 onChanged: onVolumeChanged,
               ),
-              Text('${volume}'),
+              Text('$volume'),
               const SizedBox(height: 15),
             ],
           ),
