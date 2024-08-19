@@ -1,11 +1,28 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:tebak_kata/domain/wordle/character_models.dart';
+import 'package:tebak_kata/data/wordle_repository.dart';
+
+enum CharacterStatus { exist, existDifferentIndex, notExist }
+
+class CharacterModels {
+  final String? character;
+
+  final CharacterStatus? status;
+
+  const CharacterModels({this.character, this.status});
+
+  CharacterModels copyWith({String? character, CharacterStatus? status}) =>
+      CharacterModels(
+          character: character ?? this.character,
+          status: status ?? this.status);
+}
 
 enum StageStatus { initial, complete }
 
 class WordleProvider with ChangeNotifier {
+  final WordleRepository wordleRepo;
+
   final Random _random = Random();
   final int _tried = 6;
 
@@ -27,8 +44,16 @@ class WordleProvider with ChangeNotifier {
   int row = 0;
   int column = 0;
 
-  WordleProvider() {
+  int _hintMax = 2;
+  int get hintMax => _hintMax;
+
+  WordleProvider({required this.wordleRepo}) {
+    getWord();
     initialGuessedWord();
+  }
+
+  Future<void> getWord() async {
+    await wordleRepo.getRandomWord();
   }
 
   Future<void> initialGuessedWord() async {
@@ -121,6 +146,7 @@ class WordleProvider with ChangeNotifier {
 
     _guessedWord[_tried - 1][generate] = CharacterModels(
         character: _word[generate], status: CharacterStatus.exist);
+    _hintMax--;
 
     notifyListeners();
   }

@@ -1,9 +1,20 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
-class AppTheme {
-  static const appTheme = Brightness.dark;
+enum Themes { sakuraTheme, darkTheme }
 
+extension ThemesX on Themes {
+  ThemeData get getThemeData {
+    switch (this) {
+      case Themes.sakuraTheme:
+        return AppTheme.sakuraTheme;
+      case Themes.darkTheme:
+        return AppTheme.darkTheme;
+    }
+  }
+}
+
+class AppTheme {
   static const gridBoxColor = Color(0xFF212121);
 
   static final darkTheme = FlexThemeData.dark(
@@ -17,8 +28,6 @@ class AppTheme {
       elevatedButtonRadius: 4.0,
     ),
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
-    // To use the playground font, add GoogleFonts package and uncomment
-    // fontFamily: GoogleFonts.notoSans().fontFamily,
   );
 
   static final sakuraTheme = FlexThemeData.light(
@@ -32,8 +41,6 @@ class AppTheme {
       elevatedButtonRadius: 0.0,
     ),
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
-    // To use the playground font, add GoogleFonts package and uncomment
-    // fontFamily: GoogleFonts.notoSans().fontFamily,
   );
 
   static final lightTheme = ThemeData();

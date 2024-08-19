@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:tebak_kata/data/theme_local_storage.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
 
 class SettingsProvider with ChangeNotifier {
+  final ThemeLocalStorage themeLocal;
+
   PlayerState _playerState = PlayerState.playing;
   PlayerState get playerState => _playerState;
 
@@ -17,10 +20,11 @@ class SettingsProvider with ChangeNotifier {
   double _volume = 0.05;
   double get volume => _volume;
 
-  ThemeData _selectedTheme = AppTheme.sakuraTheme;
-  ThemeData get selectedTheme => _selectedTheme;
+  Themes _selectedTheme = Themes.sakuraTheme;
+  Themes get selectedTheme => _selectedTheme;
 
-  SettingsProvider() {
+  SettingsProvider({required this.themeLocal}) {
+    onInitialTheme();
     // playAudio();
     // playerStateChange = _player.onPlayerStateChanged.listen((state) {
     //   onPlayerStateChanged(state);
@@ -78,10 +82,17 @@ class SettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void onThemeChange(ThemeData theme) {
+  void onInitialTheme(){
+    final int themeIndex = themeLocal.getlocalTheme();
+    _selectedTheme = Themes.values[themeIndex];
+    notifyListeners();
+  }
+  Future<void> onThemeChange(Themes theme) async {
     if (theme == _selectedTheme) {
       return;
     }
+    await themeLocal.setLocalTheme(theme.index);
+
     _selectedTheme = theme;
 
     notifyListeners();

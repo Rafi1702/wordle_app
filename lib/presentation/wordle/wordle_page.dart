@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tebak_kata/domain/wordle/character_models.dart';
 
 import 'package:tebak_kata/helper/qwerty.dart';
-import 'package:tebak_kata/presentation/widgets/settings_dialog.dart';
+import 'package:tebak_kata/presentation/settings/widgets/settings_dialog.dart';
 import 'package:tebak_kata/presentation/wordle/widgets/qwerty_keypad.dart';
 
 import 'package:tebak_kata/presentation/wordle/providers/wordle_provider.dart';
@@ -39,7 +38,7 @@ class WordlePage extends StatelessWidget {
               ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: state.tried,
+                  itemCount: state.guessedWord.length,
                   separatorBuilder: (context, index) {
                     return const SizedBox(
                       height: 20.0,
@@ -95,9 +94,11 @@ class WordlePage extends StatelessWidget {
                           : 'Submit')),
                   const Spacer(),
                   ElevatedButton(
-                      onPressed: () {
-                        context.read<WordleProvider>().onHintTextTap();
-                      },
+                      onPressed: state.hintMax == 0
+                          ? null
+                          : () {
+                              context.read<WordleProvider>().onHintTextTap();
+                            },
                       child: const Text('Hint Text'))
                 ],
               ),

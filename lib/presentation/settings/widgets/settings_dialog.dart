@@ -55,7 +55,7 @@ class CustomDialog extends StatelessWidget {
                       onTap: () {
                         context
                             .read<SettingsProvider>()
-                            .onThemeChange(AppTheme.sakuraTheme);
+                            .onThemeChange(Themes.sakuraTheme);
                       },
                       child: CustomPaint(
                         size: const Size(
@@ -68,7 +68,7 @@ class CustomDialog extends StatelessWidget {
                             circleColor2:
                                 AppTheme.sakuraTheme.colorScheme.secondary,
                             isSelected: settingState.selectedTheme ==
-                                AppTheme.sakuraTheme),
+                               Themes.sakuraTheme),
                       ),
                     ),
                     const SizedBox(width: 10.0),
@@ -76,7 +76,7 @@ class CustomDialog extends StatelessWidget {
                       onTap: () {
                         context
                             .read<SettingsProvider>()
-                            .onThemeChange(AppTheme.darkTheme);
+                            .onThemeChange(Themes.darkTheme);
                       },
                       child: CustomPaint(
                         size: const Size(
@@ -89,7 +89,7 @@ class CustomDialog extends StatelessWidget {
                             circleColor2:
                                 AppTheme.darkTheme.colorScheme.surface,
                             isSelected: settingState.selectedTheme ==
-                                AppTheme.darkTheme),
+                                Themes.darkTheme),
                       ),
                     )
                   ],
