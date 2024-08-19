@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tebak_kata/data/audio_local_storage.dart';
-import 'package:tebak_kata/data/theme_local_storage.dart';
-import 'package:tebak_kata/data/wordle_repository.dart';
+import 'package:tebak_kata/data/datasource/audio_local_storage.dart';
+import 'package:tebak_kata/data/datasource/facts_word_remote.dart';
+import 'package:tebak_kata/data/datasource/random_word_remote.dart';
+import 'package:tebak_kata/data/datasource/theme_local_storage.dart';
+import 'package:tebak_kata/data/repository/wordle_repository.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
 
 import 'package:tebak_kata/presentation/wordle/wordle_page.dart';
@@ -22,11 +24,17 @@ void main() async {
     ),
   );
 
+  final randomWordRemote = RandomWordRemote();
+
+  final factWordRemote = FactsWordRemote();
+
   runApp(
     MultiProvider(
       providers: [
         Provider(
-          create: (context) => WordleRepository(),
+          create: (context) => WordleRepository(
+              randomWordRemote: randomWordRemote,
+              factsWordRemote: factWordRemote),
         ),
         Provider(
           create: (context) =>

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:tebak_kata/data/wordle_repository.dart';
+import 'package:tebak_kata/data/repository/wordle_repository.dart';
 
 enum CharacterStatus { exist, existDifferentIndex, notExist }
 
