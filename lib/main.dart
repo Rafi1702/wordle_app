@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tebak_kata/data/datasource/audio_local_storage.dart';
-import 'package:tebak_kata/data/datasource/facts_word_remote.dart';
-import 'package:tebak_kata/data/datasource/random_word_remote.dart';
-import 'package:tebak_kata/data/datasource/theme_local_storage.dart';
-import 'package:tebak_kata/data/repository/wordle_repository.dart';
+import 'package:tebak_kata/data/local/audio_local_storage.dart';
+import 'package:tebak_kata/data/remote/facts_word_remote.dart';
+import 'package:tebak_kata/data/remote/random_word_remote.dart';
+import 'package:tebak_kata/data/local/theme_local_storage.dart';
+import 'package:tebak_kata/domain/repository/wordle_repository.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
 
-import 'package:tebak_kata/presentation/wordle/wordle_page.dart';
-import 'package:tebak_kata/global_state/settings_provider.dart';
-import 'package:tebak_kata/presentation/wordle/providers/wordle_provider.dart';
+import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
+import 'package:tebak_kata/feature/settings/providers/settings_provider.dart';
+import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
 
 const themeKey = "__theme__";
 const volumeKey = "___volume___";

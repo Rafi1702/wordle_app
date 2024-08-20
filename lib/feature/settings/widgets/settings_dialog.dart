@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tebak_kata/global_state/settings_provider.dart';
+import 'package:tebak_kata/feature/settings/providers/settings_provider.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
 
 class CustomDialog extends StatelessWidget {

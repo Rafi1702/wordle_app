@@ -1,5 +1,5 @@
-import 'package:tebak_kata/data/datasource/audio_local_storage.dart';
-import 'package:tebak_kata/data/datasource/theme_local_storage.dart';
+import 'package:tebak_kata/data/local/audio_local_storage.dart';
+import 'package:tebak_kata/data/local/theme_local_storage.dart';
 
 class SettingsRepository {
   final ThemeLocalStorage themeLocalStorage;

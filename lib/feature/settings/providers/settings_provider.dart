@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:tebak_kata/data/datasource/audio_local_storage.dart';
-import 'package:tebak_kata/data/datasource/theme_local_storage.dart';
+import 'package:tebak_kata/data/local/audio_local_storage.dart';
+import 'package:tebak_kata/data/local/theme_local_storage.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
 
 class SettingsProvider with ChangeNotifier {

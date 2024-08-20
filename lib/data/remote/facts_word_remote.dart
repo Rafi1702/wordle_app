@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tebak_kata/data/models/word_fact.dart';
+import 'package:tebak_kata/domain/models/word_fact.dart';
 import 'package:http/http.dart' as http;
 
 class FactsWordRemote {

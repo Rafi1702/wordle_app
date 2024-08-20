@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:tebak_kata/helper/qwerty.dart';
-import 'package:tebak_kata/presentation/settings/widgets/settings_dialog.dart';
-import 'package:tebak_kata/presentation/wordle/widgets/qwerty_keypad.dart';
+import 'package:tebak_kata/feature/settings/widgets/settings_dialog.dart';
+import 'package:tebak_kata/feature/wordle/widgets/qwerty_keypad.dart';
 
-import 'package:tebak_kata/presentation/wordle/providers/wordle_provider.dart';
+import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
 
 class WordlePage extends StatelessWidget {
   static const route = '/';

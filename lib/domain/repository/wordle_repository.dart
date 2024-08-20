@@ -1,6 +1,6 @@
-import 'package:tebak_kata/data/datasource/facts_word_remote.dart';
-import 'package:tebak_kata/data/datasource/random_word_remote.dart';
-import 'package:tebak_kata/data/models/word_fact.dart';
+import 'package:tebak_kata/data/remote/facts_word_remote.dart';
+import 'package:tebak_kata/data/remote/random_word_remote.dart';
+import 'package:tebak_kata/domain/models/word_fact.dart';
 
 class WordleRepository {
   final RandomWordRemote randomWordRemote;
