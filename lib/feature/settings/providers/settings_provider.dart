@@ -78,22 +78,25 @@ class SettingsProvider with ChangeNotifier {
   Future<void> onVolumeChange(double value) async {
     _volume = value;
 
-    await _player.setVolume(_volume);
-
-    await audioLocal.setVolume(_volume);
+    await Future.wait(
+      [
+        _player.setVolume(_volume),
+        audioLocal.setVolume(_volume),
+      ],
+    );
 
     notifyListeners();
   }
 
   Future<void> onBgmCheckBoxTap() async {
-    if (_isBgmActive) {
-      await _player.setVolume(_volume);
-      _isBgmActive = false;
-    } else {
-      await _player.setVolume(0);
-      _isBgmActive = true;
-    }
-    audioLocal.setBgmValue(_isBgmActive);
+    _isBgmActive = !_isBgmActive;
+
+    await Future.wait(
+      [
+        _isBgmActive ? _player.setVolume(_volume) : _player.setVolume(0),
+        audioLocal.setBgmValue(_isBgmActive),
+      ],
+    );
 
     notifyListeners();
   }
