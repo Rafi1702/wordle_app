@@ -18,7 +18,7 @@ class CharacterModels {
           status: status ?? this.status);
 }
 
-enum StageStatus { initial, complete }
+enum WordleStatus { initial, loading, success, error }
 
 class WordleProvider with ChangeNotifier {
   final WordleRepository wordleRepo;
@@ -31,8 +31,8 @@ class WordleProvider with ChangeNotifier {
 
   Map<String, dynamic> _wordOccurences = {};
 
-  StageStatus _stageStatus = StageStatus.initial;
-  StageStatus get stageStatus => _stageStatus;
+  WordleStatus _status = WordleStatus.initial;
+  WordleStatus get status => _status;
 
   final List<List<CharacterModels>> _guessedWord = [];
   List<List<CharacterModels>> get guessedWord => _guessedWord;
@@ -47,13 +47,22 @@ class WordleProvider with ChangeNotifier {
   int _hintMax = 2;
   int get hintMax => _hintMax;
 
+  bool _isStageCompleted = false;
+  bool get isStageCompleted => _isStageCompleted;
+
   WordleProvider({required this.wordleRepo}) {
     getWord();
     initialGuessedWord();
   }
 
   Future<void> getWord() async {
-    await wordleRepo.getRandomWord();
+    try {
+      await wordleRepo.getRandomWord();
+      _status = WordleStatus.success;
+      notifyListeners();
+    } catch (e) {
+      _status = WordleStatus.error;
+    }
   }
 
   Future<void> initialGuessedWord() async {
@@ -114,16 +123,12 @@ class WordleProvider with ChangeNotifier {
 
     _wordOccurences = countWordOccurences(_word);
 
-    if (isStageCompleted(_guessedWord[row], _word) || row == _tried - 1) {
-      _stageStatus = StageStatus.complete;
+    if (isComplete(_guessedWord[row], _word) || row == _tried - 1) {
+      _isStageCompleted = true;
     } else {
       _isValid = false;
     }
 
-    // if (_guessedWord[row][column].character != null) {
-    //   column += 1;
-    //   return;
-    // }
     row++;
     column = 0;
 
@@ -153,7 +158,7 @@ class WordleProvider with ChangeNotifier {
 
   /* Helper method
     Check if the character exist same as word length */
-  bool isStageCompleted(List<CharacterModels> words, String word) {
+  bool isComplete(List<CharacterModels> words, String word) {
     int existCounter = 0;
     for (int i = 0; i < words.length; i++) {
       if (words[i].status == CharacterStatus.exist) {
