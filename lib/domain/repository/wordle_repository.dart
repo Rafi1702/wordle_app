@@ -7,11 +7,15 @@ class WordleRepository {
   final FactsWordRemote factsWordRemote;
   WordleRepository(
       {required this.randomWordRemote, required this.factsWordRemote});
-  Future<List<WordFact>> getRandomWord() async {
-    final word = await randomWordRemote.getWord();
 
+  Future<String> getRandomWord() async {
+    final word = await randomWordRemote.getWord();
+    return word;
+  }
+
+  Future<WordFact> getWordFact(String word) async {
     final wordFacts = await factsWordRemote.getWordFacts(word);
 
-    return wordFacts;
+    return wordFacts.first;
   }
 }

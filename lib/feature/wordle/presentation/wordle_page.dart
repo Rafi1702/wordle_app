@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tebak_kata/domain/models/word_fact.dart';
 
 import 'package:tebak_kata/helper/qwerty.dart';
 import 'package:tebak_kata/feature/settings/widgets/settings_dialog.dart';
@@ -37,7 +38,7 @@ class WordlePage extends StatelessWidget {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            case WordleStatus.success:
+            case WordleStatus.success || WordleStatus.loading:
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Column(
@@ -48,7 +49,7 @@ class WordlePage extends StatelessWidget {
                         itemCount: state.guessedWord.length,
                         separatorBuilder: (context, index) {
                           return const SizedBox(
-                            height: 20.0,
+                            height: 10.0,
                           );
                         },
                         itemBuilder: (context, triedIndex) {
@@ -57,7 +58,8 @@ class WordlePage extends StatelessWidget {
                                 const EdgeInsets.symmetric(horizontal: 32.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List<Widget>.generate(4, (j) {
+                              children: List<Widget>.generate(
+                                  state.guessedWord[triedIndex].length, (j) {
                                 return SizedBox(
                                   height: 60.0,
                                   width: 60.0,
@@ -84,6 +86,7 @@ class WordlePage extends StatelessWidget {
                             ),
                           );
                         }),
+                    const Spacer(),
                     Row(
                       children: [
                         const Spacer(
@@ -93,8 +96,8 @@ class WordlePage extends StatelessWidget {
                             onPressed: state.isValid
                                 ? () {
                                     if (state.isStageCompleted) {
-                                      Navigator.of(context)
-                                          .popAndPushNamed(route);
+                                      Navigator.popAndPushNamed(
+                                          context, WordlePage.route);
                                     } else {
                                       context
                                           .read<WordleProvider>()
@@ -116,7 +119,13 @@ class WordlePage extends StatelessWidget {
                             child: const Text('Hint Text'))
                       ],
                     ),
-                    child!,
+                    const Spacer(),
+                    state.isStageCompleted
+                        ? _WordFactsSection(
+                            wordFact: state.wordFact,
+                            isLoading: state.status == WordleStatus.loading,
+                          )
+                        : const _KeyPads()
                   ],
                 ),
               );
@@ -129,7 +138,6 @@ class WordlePage extends StatelessWidget {
               return Container();
           }
         },
-        child: const _KeyPads(),
       ),
     );
   }
@@ -331,5 +339,20 @@ class _KeyPads extends StatelessWidget {
         )
       ],
     );
+  }
+}
+
+class _WordFactsSection extends StatelessWidget {
+  final WordFact? wordFact;
+  final bool isLoading;
+  const _WordFactsSection({this.wordFact, required this.isLoading});
+
+  @override
+  Widget build(BuildContext context) {
+    return isLoading
+        ? const CircularProgressIndicator()
+        : wordFact != null
+            ? const Text('ada faktanya')
+            : const Text('Belum ada faktanya');
   }
 }

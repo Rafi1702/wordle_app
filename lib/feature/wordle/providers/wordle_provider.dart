@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:tebak_kata/domain/models/word_fact.dart';
 import 'package:tebak_kata/domain/repository/wordle_repository.dart';
 
 enum CharacterStatus { exist, existDifferentIndex, notExist }
@@ -24,74 +25,77 @@ class WordleProvider with ChangeNotifier {
   final WordleRepository wordleRepo;
 
   final Random _random = Random();
+
+  //total row that user tried to guess
   final int _tried = 6;
 
-  int get tried => _tried;
-  final String _word = "COME";
-
+  String _word = "";
   Map<String, dynamic> _wordOccurences = {};
 
+  //status for fetching the data (random word)
   WordleStatus _status = WordleStatus.initial;
   WordleStatus get status => _status;
 
-  final List<List<CharacterModels>> _guessedWord = [];
+  List<List<CharacterModels>> _guessedWord = [];
   List<List<CharacterModels>> get guessedWord => _guessedWord;
 
   //To check if row of guessed word is filled
   bool _isValid = false;
   bool get isValid => _isValid;
 
-  int row = 0;
-  int column = 0;
+  int _row = 0;
+  int _column = 0;
 
+  //limitation of hint
   int _hintMax = 2;
   int get hintMax => _hintMax;
 
   bool _isStageCompleted = false;
   bool get isStageCompleted => _isStageCompleted;
 
+  WordFact? _wordFact;
+  WordFact? get wordFact => _wordFact;
+
   WordleProvider({required this.wordleRepo}) {
     getWord();
-    initialGuessedWord();
   }
 
   Future<void> getWord() async {
     try {
-      await wordleRepo.getRandomWord();
+      final data = await wordleRepo.getRandomWord();
+      _word = data.toUpperCase();
+      debugPrint(_word);
+      for (int i = 0; i < _tried; i++) {
+        _guessedWord.add([]);
+        for (int j = 0; j < _word.length; j++) {
+          _guessedWord[i]
+              .add(const CharacterModels(status: CharacterStatus.notExist));
+        }
+      }
+      _wordOccurences = countWordOccurences(_word);
+
       _status = WordleStatus.success;
       notifyListeners();
     } catch (e) {
+      debugPrint(e.toString());
       _status = WordleStatus.error;
+      notifyListeners();
     }
-  }
-
-  Future<void> initialGuessedWord() async {
-    for (int i = 0; i < _tried; i++) {
-      _guessedWord.add([]);
-      for (int j = 0; j < _word.length; j++) {
-        _guessedWord[i]
-            .add(const CharacterModels(status: CharacterStatus.notExist));
-      }
-    }
-
-    _wordOccurences = countWordOccurences(_word);
-
-    notifyListeners();
   }
 
   void onWordChanged(String value) {
-    int length = _guessedWord[row].length - 1;
+    int length = _guessedWord[_row].length - 1;
 
-    if (_guessedWord[row][length].character != null) {
+    if (_guessedWord[_row][length].character != null) {
       return;
     }
 
-    _guessedWord[row][column] =
-        _guessedWord[row][column].copyWith(character: value);
+    _guessedWord[_row][_column] =
+        _guessedWord[_row][_column].copyWith(character: value);
 
-    column += 1;
+    _column += 1;
 
-    if (column == _word.length) {
+    if (_column == _word.length) {
       _isValid = true;
       notifyListeners();
       return;
@@ -100,46 +104,32 @@ class WordleProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void onSubmitButton() {
-    for (int i = 0; i < _word.length; i++) {
-      if (_word[i] == _guessedWord[row][i].character &&
-          _wordOccurences[_guessedWord[row][i].character] != 0) {
-        _guessedWord[row][i] =
-            _guessedWord[row][i].copyWith(status: CharacterStatus.exist);
-        _wordOccurences[_guessedWord[row][i].character!] =
-            _wordOccurences[_guessedWord[row][i].character!] - 1;
-      } else if (_word.contains(_guessedWord[row][i].character!) &&
-          _word[i] != _guessedWord[row][i].character &&
-          _wordOccurences[_guessedWord[row][i].character] != 0) {
-        _guessedWord[row][i] = _guessedWord[row][i]
-            .copyWith(status: CharacterStatus.existDifferentIndex);
-        _wordOccurences[_guessedWord[row][i].character!] =
-            _wordOccurences[_guessedWord[row][i].character!] - 1;
-      } else {
-        _guessedWord[row][i] =
-            _guessedWord[row][i].copyWith(status: CharacterStatus.notExist);
-      }
-    }
-
+  Future<void> onSubmitButton() async {
     _wordOccurences = countWordOccurences(_word);
 
-    if (isComplete(_guessedWord[row], _word) || row == _tried - 1) {
-      _isStageCompleted = true;
-    } else {
-      _isValid = false;
-    }
+    _guessedWord = changeCharacterStatus(guessedWord, _row, _wordOccurences);
 
-    row++;
-    column = 0;
+    _isStageCompleted = isComplete(_guessedWord[_row], _word, _tried);
+
+    /* _isValid depends on _isStageCompleted, if stage is not completed yet, isValid should be false*/
+    _isValid = _isStageCompleted;
+
+    _row++;
+    _column = 0;
 
     notifyListeners();
+
+    //after state updated and the stage completed, function will fetch word facts
+    if (_isStageCompleted) {
+      await getWordFacts();
+    }
   }
 
   void onDeleteCharacter() {
-    if (column <= 0) {
+    if (_column <= 0) {
       return;
     }
-    _guessedWord[row][--column] =
+    _guessedWord[_row][--_column] =
         const CharacterModels(character: null, status: null);
     _isValid = false;
 
@@ -156,9 +146,25 @@ class WordleProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getWordFacts() async {
+    _status = WordleStatus.loading;
+    notifyListeners();
+
+    try {
+      final data = await wordleRepo.getWordFact(_word);
+      _wordFact = data;
+      _status = WordleStatus.success;
+      notifyListeners();
+    } catch (e) {
+      _wordFact = null;
+      _status = WordleStatus.success;
+      notifyListeners();
+    }
+  }
+
   /* Helper method
     Check if the character exist same as word length */
-  bool isComplete(List<CharacterModels> words, String word) {
+  bool isComplete(List<CharacterModels> words, String word, int tried) {
     int existCounter = 0;
     for (int i = 0; i < words.length; i++) {
       if (words[i].status == CharacterStatus.exist) {
@@ -166,7 +172,7 @@ class WordleProvider with ChangeNotifier {
       }
     }
 
-    return existCounter == word.length;
+    return existCounter == word.length || existCounter == tried;
   }
 
   Map<String, dynamic> countWordOccurences(String word) {
@@ -179,6 +185,29 @@ class WordleProvider with ChangeNotifier {
       }
     }
     return wordOccurences;
+  }
+
+  List<List<CharacterModels>> changeCharacterStatus(
+      List<List<CharacterModels>> guessedWord, int row, Map<String, dynamic> wordOccurences) {
+    var temp = guessedWord;
+    for (int i = 0; i < _word.length; i++) {
+      if (_word[i] == temp[row][i].character &&
+          wordOccurences[temp[row][i].character] != 0) {
+        temp[row][i] = temp[row][i].copyWith(status: CharacterStatus.exist);
+        wordOccurences[temp[row][i].character!] =
+            wordOccurences[temp[row][i].character!] - 1;
+      } else if (_word.contains(temp[row][i].character!) &&
+          _word[i] != temp[row][i].character &&
+          wordOccurences[temp[row][i].character] != 0) {
+        temp[row][i] =
+            temp[row][i].copyWith(status: CharacterStatus.existDifferentIndex);
+        wordOccurences[temp[row][i].character!] =
+            wordOccurences[temp[row][i].character!] - 1;
+      } else {
+        temp[row][i] = temp[row][i].copyWith(status: CharacterStatus.notExist);
+      }
+    }
+    return temp;
   }
 }
 
