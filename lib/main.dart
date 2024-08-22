@@ -5,6 +5,7 @@ import 'package:tebak_kata/data/local/audio_local_storage.dart';
 import 'package:tebak_kata/data/remote/facts_word_remote.dart';
 import 'package:tebak_kata/data/remote/random_word_remote.dart';
 import 'package:tebak_kata/data/local/theme_local_storage.dart';
+import 'package:tebak_kata/domain/repository/settings_repository.dart';
 import 'package:tebak_kata/domain/repository/wordle_repository.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
 
@@ -25,8 +26,11 @@ void main() async {
   );
 
   final randomWordRemote = RandomWordRemote();
-
   final factWordRemote = FactsWordRemote();
+  final themeLocalStorage =
+      ThemeLocalStorage(pref: prefsWithCache, key: themeKey);
+  final audioLocalStorage = AudioLocalStorage(
+      pref: prefsWithCache, volumeKey: volumeKey, bgmKey: bgmKey);
 
   runApp(
     MultiProvider(
@@ -37,12 +41,10 @@ void main() async {
               factsWordRemote: factWordRemote),
         ),
         Provider(
-          create: (context) =>
-              ThemeLocalStorage(pref: prefsWithCache, key: themeKey),
-        ),
-        Provider(
-          create: (context) => AudioLocalStorage(
-              pref: prefsWithCache, volumeKey: volumeKey, bgmKey: bgmKey),
+          create: (context) => SettingsRepository(
+            themeLocalStorage: themeLocalStorage,
+            audioLocalStorage: audioLocalStorage,
+          ),
         ),
       ],
       child: const MyApp(),
@@ -59,10 +61,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       lazy: false,
       create: (BuildContext context) {
-        return SettingsProvider(
-          themeLocal: context.read<ThemeLocalStorage>(),
-          audioLocal: context.read<AudioLocalStorage>(),
-        );
+        return SettingsProvider(settingsRepository: context.read<SettingsRepository>());
       },
       child: Builder(builder: (context) {
         final state = context.watch<SettingsProvider>();

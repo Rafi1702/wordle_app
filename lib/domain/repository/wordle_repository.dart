@@ -13,9 +13,9 @@ class WordleRepository {
     return word;
   }
 
-  Future<WordFact> getWordFact(String word) async {
+  Future<List<WordFact>> getWordFact(String word) async {
     final wordFacts = await factsWordRemote.getWordFacts(word);
 
-    return wordFacts.first;
+    return wordFacts;
   }
 }

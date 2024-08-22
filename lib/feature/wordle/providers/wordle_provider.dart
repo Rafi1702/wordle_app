@@ -53,8 +53,8 @@ class WordleProvider with ChangeNotifier {
   bool _isStageCompleted = false;
   bool get isStageCompleted => _isStageCompleted;
 
-  WordFact? _wordFact;
-  WordFact? get wordFact => _wordFact;
+  List<WordFact> _wordFact = [];
+  List<WordFact> get wordFact => _wordFact;
 
   WordleProvider({required this.wordleRepo}) {
     getWord();
@@ -62,7 +62,8 @@ class WordleProvider with ChangeNotifier {
 
   Future<void> getWord() async {
     try {
-      final data = await wordleRepo.getRandomWord();
+      // final data = await wordleRepo.getRandomWord();
+      const data = "POSE";
       _word = data.toUpperCase();
       debugPrint(_word);
       for (int i = 0; i < _tried; i++) {
@@ -156,7 +157,6 @@ class WordleProvider with ChangeNotifier {
       _status = WordleStatus.success;
       notifyListeners();
     } catch (e) {
-      _wordFact = null;
       _status = WordleStatus.success;
       notifyListeners();
     }
@@ -188,8 +188,11 @@ class WordleProvider with ChangeNotifier {
   }
 
   List<List<CharacterModels>> changeCharacterStatus(
-      List<List<CharacterModels>> guessedWord, int row, Map<String, dynamic> wordOccurences) {
-    var temp = guessedWord;
+      List<List<CharacterModels>> guessedWord,
+      int row,
+      Map<String, dynamic> wordOccurences) {
+    final temp = guessedWord;
+
     for (int i = 0; i < _word.length; i++) {
       if (_word[i] == temp[row][i].character &&
           wordOccurences[temp[row][i].character] != 0) {

@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:tebak_kata/data/local/audio_local_storage.dart';
-import 'package:tebak_kata/data/local/theme_local_storage.dart';
+
+import 'package:tebak_kata/domain/repository/settings_repository.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
 
 class SettingsProvider with ChangeNotifier {
-  final ThemeLocalStorage themeLocal;
-  final AudioLocalStorage audioLocal;
+  final SettingsRepository settingsRepository;
 
   PlayerState _playerState = PlayerState.playing;
   PlayerState get playerState => _playerState;
@@ -25,7 +24,7 @@ class SettingsProvider with ChangeNotifier {
   Themes _selectedTheme = Themes.sakuraTheme;
   Themes get selectedTheme => _selectedTheme;
 
-  SettingsProvider({required this.themeLocal, required this.audioLocal}) {
+  SettingsProvider({required this.settingsRepository}) {
     onInitialSettings();
     // playAudio();
     // playerStateChange = _player.onPlayerStateChanged.listen((state) {
@@ -45,9 +44,9 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void onInitialSettings() {
-    final volumeValue = audioLocal.getVolume();
-    final isBgmMute = audioLocal.getBgmValue();
-    final int themeIndex = themeLocal.getlocalTheme();
+    final volumeValue = settingsRepository.volume;
+    final isBgmMute = settingsRepository.bgmValue;
+    final themeIndex = settingsRepository.localTheme;
     _selectedTheme = Themes.values[themeIndex];
     _volume = volumeValue;
     _isBgmActive = isBgmMute;
@@ -81,7 +80,7 @@ class SettingsProvider with ChangeNotifier {
     await Future.wait(
       [
         _player.setVolume(_volume),
-        audioLocal.setVolume(_volume),
+        settingsRepository.setVolume(_volume),
       ],
     );
 
@@ -94,7 +93,7 @@ class SettingsProvider with ChangeNotifier {
     await Future.wait(
       [
         _isBgmActive ? _player.setVolume(_volume) : _player.setVolume(0),
-        audioLocal.setBgmValue(_isBgmActive),
+        settingsRepository.setBgmValue(_isBgmActive),
       ],
     );
 
@@ -105,7 +104,7 @@ class SettingsProvider with ChangeNotifier {
     if (theme == _selectedTheme) {
       return;
     }
-    await themeLocal.setLocalTheme(theme.index);
+    await settingsRepository.setLocalTheme(theme.index);
 
     _selectedTheme = theme;
 
