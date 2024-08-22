@@ -10,9 +10,15 @@ class WordFactsBottomModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final basetextStyle = Theme.of(context).textTheme.bodyLarge;
+    final titleTextStyle = Theme.of(context).textTheme.titleLarge;
     return DraggableScrollableSheet(
       expand: false,
       builder: (context, scrollController) => ListView(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 8.0,
+        ),
         controller: scrollController,
         children: <Widget>[
           ListView.separated(
@@ -28,7 +34,8 @@ class WordFactsBottomModal extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(wordFacts[wordFactsIndex].phonetic),
+                      Text(wordFacts[wordFactsIndex].phonetic,
+                          style: titleTextStyle),
                       IconButton(
                         icon: const Icon(Icons.volume_up),
                         onPressed: () {},
@@ -36,29 +43,44 @@ class WordFactsBottomModal extends StatelessWidget {
                     ],
                   ),
                   Wrap(
-                    spacing: 10.0,
+                    spacing: 4.0,
                     children: wordFacts[wordFactsIndex].meanings.map((e) {
-                      return Text(e.partOfSpeech);
+                      return Chip(label: Text(e.partOfSpeech));
                     }).toList(),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: wordFacts[wordFactsIndex].meanings.expand(
-                      (e) {
-                        return e.definitions.map((t) {
-                          return Text(t.definition);
-                        }).toList();
-                      },
-                    ).toList(),
+
+                  ...wordFacts[wordFactsIndex].meanings.map(
+                    (e) {
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Meanings'),
+                            const SizedBox(height: 4.0),
+                            ...e.definitions.asMap().entries.map((e) {
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('${e.key + 1}. '),
+                                  Expanded(
+                                    child: Text(
+                                      '${e.value.definition}',
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }),
+                            const SizedBox(height: 8.0),
+                          ]);
+                    },
                   ),
+                  // Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children:
+                  // ),
                 ],
               );
             },
           ),
-          ...List.generate(
-            10,
-            (index) => Text('e'),
-          )
         ],
       ),
     );
