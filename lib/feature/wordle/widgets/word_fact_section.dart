@@ -18,6 +18,7 @@ class WordFactsSection extends StatelessWidget {
         .textTheme
         .titleLarge!
         .copyWith(color: Theme.of(context).colorScheme.onPrimary);
+    final iconColor = Theme.of(context).colorScheme.onPrimary;
     return Center(
       child: isLoading
           ? const CircularProgressIndicator()
@@ -26,7 +27,9 @@ class WordFactsSection extends StatelessWidget {
                 showModalBottomSheet<void>(
                     context: context,
                     builder: (BuildContext context) {
-                      return const BottomModal();
+                      return WordFactsBottomModal(
+                        wordFacts: wordFacts,
+                      );
                     });
               },
               child: Container(
@@ -42,7 +45,19 @@ class WordFactsSection extends StatelessWidget {
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(wordFacts.first.phonetic, style: titleTextStyle),
+                          Row(
+                            children: [
+                              Text(wordFacts.first.phonetic,
+                                  style: titleTextStyle),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.volume_up,
+                                  color: iconColor,
+                                ),
+                                onPressed: () {},
+                              )
+                            ],
+                          ),
                           Text(wordFacts.first.meanings.first.partOfSpeech,
                               style: basetextStyle),
                           Text(

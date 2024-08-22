@@ -32,112 +32,114 @@ class WordlePage extends StatelessWidget {
           )
         ],
       ),
-      body: Consumer<WordleProvider>(
-        builder: (context, state, child) {
-          switch (state.status) {
-            case WordleStatus.initial:
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            case WordleStatus.success || WordleStatus.loading:
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: state.guessedWord.length,
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(
-                            height: 10.0,
-                          );
-                        },
-                        itemBuilder: (context, triedIndex) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 32.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List<Widget>.generate(
-                                  state.guessedWord[triedIndex].length, (j) {
-                                return SizedBox(
-                                  height: 60.0,
-                                  width: 60.0,
-                                  child: Card(
-                                    color: colorHelper(
-                                        state.guessedWord[triedIndex][j].status,
-                                        context),
-                                    child: Center(
-                                      child: Text(
-                                        state.guessedWord[triedIndex][j]
-                                                .character ??
-                                            '',
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface,
-                                          fontWeight: FontWeight.bold,
+      body: SafeArea(
+        child: Consumer<WordleProvider>(
+          builder: (context, state, child) {
+            switch (state.status) {
+              case WordleStatus.initial:
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              case WordleStatus.success || WordleStatus.loading:
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: state.guessedWord.length,
+                          separatorBuilder: (context, index) {
+                            return const SizedBox(
+                              height: 10.0,
+                            );
+                          },
+                          itemBuilder: (context, triedIndex) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 32.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: List<Widget>.generate(
+                                    state.guessedWord[triedIndex].length, (j) {
+                                  return SizedBox(
+                                    height: 60.0,
+                                    width: 60.0,
+                                    child: Card(
+                                      color: colorHelper(
+                                          state.guessedWord[triedIndex][j].status,
+                                          context),
+                                      child: Center(
+                                        child: Text(
+                                          state.guessedWord[triedIndex][j]
+                                                  .character ??
+                                              '',
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              }),
-                            ),
-                          );
-                        }),
-                    Row(
-                      children: [
-                        const Spacer(
-                          flex: 3,
-                        ),
-                        ElevatedButton(
-                            onPressed: state.isValid
-                                ? () {
-                                    if (state.isStageCompleted) {
-                                      Navigator.popAndPushNamed(
-                                          context, WordlePage.route);
-                                    } else {
+                                  );
+                                }),
+                              ),
+                            );
+                          }),
+                      Row(
+                        children: [
+                          const Spacer(
+                            flex: 3,
+                          ),
+                          ElevatedButton(
+                              onPressed: state.isValid
+                                  ? () {
+                                      if (state.isStageCompleted) {
+                                        Navigator.popAndPushNamed(
+                                            context, WordlePage.route);
+                                      } else {
+                                        context
+                                            .read<WordleProvider>()
+                                            .onSubmitButton();
+                                      }
+                                    }
+                                  : null,
+                              child: Text(
+                                  state.isStageCompleted ? 'Next' : 'Submit')),
+                          const Spacer(),
+                          ElevatedButton(
+                              onPressed: state.hintMax == 0
+                                  ? null
+                                  : () {
                                       context
                                           .read<WordleProvider>()
-                                          .onSubmitButton();
-                                    }
-                                  }
-                                : null,
-                            child: Text(
-                                state.isStageCompleted ? 'Next' : 'Submit')),
-                        const Spacer(),
-                        ElevatedButton(
-                            onPressed: state.hintMax == 0
-                                ? null
-                                : () {
-                                    context
-                                        .read<WordleProvider>()
-                                        .onHintTextTap();
-                                  },
-                            child: const Text('Hint Text'))
-                      ],
-                    ),
-                    state.isStageCompleted
-                        ? WordFactsSection(
-                            wordFacts: state.wordFact,
-                            isLoading: state.status == WordleStatus.loading,
-                          )
-                        : const KeyBoard(),
-                  ],
-                ),
-              );
-
-            case WordleStatus.error:
-              return const Center(
-                child: Text('Error'),
-              );
-            default:
-              return Container();
-          }
-        },
+                                          .onHintTextTap();
+                                    },
+                              child: const Text('Hint Text'))
+                        ],
+                      ),
+                      state.isStageCompleted
+                          ? WordFactsSection(
+                              wordFacts: state.wordFact,
+                              isLoading: state.status == WordleStatus.loading,
+                            )
+                          : const KeyBoard(),
+                    ],
+                  ),
+                );
+        
+              case WordleStatus.error:
+                return const Center(
+                  child: Text('Error'),
+                );
+              default:
+                return Container();
+            }
+          },
+        ),
       ),
     );
   }

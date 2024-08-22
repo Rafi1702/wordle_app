@@ -76,7 +76,7 @@ class CustomDialog extends StatelessWidget {
                       onTap: () {
                         context
                             .read<SettingsProvider>()
-                            .onThemeChange(Themes.darkTheme);
+                            .onThemeChange(Themes.blueTheme);
                       },
                       child: CustomPaint(
                         size: const Size(
@@ -85,11 +85,11 @@ class CustomDialog extends StatelessWidget {
                         ),
                         painter: DiagonalSplitCirclePainter(
                             circleColor1:
-                                AppTheme.darkTheme.colorScheme.primary,
+                                AppTheme.blueTheme.colorScheme.primary,
                             circleColor2:
-                                AppTheme.darkTheme.colorScheme.surface,
+                                AppTheme.blueTheme.colorScheme.surface,
                             isSelected: settingState.selectedTheme ==
-                                Themes.darkTheme),
+                                Themes.blueTheme),
                       ),
                     )
                   ],

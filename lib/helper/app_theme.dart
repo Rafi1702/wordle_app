@@ -1,15 +1,15 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
-enum Themes { sakuraTheme, darkTheme }
+enum Themes { sakuraTheme, blueTheme }
 
 extension ThemesX on Themes {
   ThemeData get getThemeData {
     switch (this) {
       case Themes.sakuraTheme:
         return AppTheme.sakuraTheme;
-      case Themes.darkTheme:
-        return AppTheme.darkTheme;
+      case Themes.blueTheme:
+        return AppTheme.blueTheme;
     }
   }
 }
@@ -17,31 +17,32 @@ extension ThemesX on Themes {
 class AppTheme {
   static const gridBoxColor = Color(0xFF212121);
 
-  static final darkTheme = FlexThemeData.dark(
+  static final sakuraTheme = FlexThemeData.dark(
     scheme: FlexScheme.sakura,
     surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-    blendLevel: 15,
+    blendLevel: 13,
     appBarStyle: FlexAppBarStyle.background,
     appBarOpacity: 0.90,
     subThemesData: const FlexSubThemesData(
       blendOnLevel: 30,
       elevatedButtonRadius: 4.0,
+      useTextTheme: true,
     ),
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
   );
 
-  static final sakuraTheme = FlexThemeData.light(
-    scheme: FlexScheme.sakura,
+  static final blueTheme = FlexThemeData.dark(
+    scheme: FlexScheme.blue,
     surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-    blendLevel: 20,
-    appBarOpacity: 0.95,
+    blendLevel: 13,
+    appBarStyle: FlexAppBarStyle.background,
+    appBarOpacity: 0.90,
     subThemesData: const FlexSubThemesData(
-      blendOnLevel: 20,
-      blendOnColors: false,
-      elevatedButtonRadius: 0.0,
+      blendOnLevel: 30,
+      elevatedButtonRadius: 4.0,
+      useTextTheme: true,
     ),
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
   );
-
   static final lightTheme = ThemeData();
 }
