@@ -110,7 +110,7 @@ class WordleProvider with ChangeNotifier {
 
     _guessedWord = changeCharacterStatus(guessedWord, _row, _wordOccurences);
 
-    _isStageCompleted = isComplete(_guessedWord[_row], _word, _tried);
+    _isStageCompleted = isComplete(_guessedWord[_row], _word, _tried, _row);
 
     /* _isValid depends on _isStageCompleted, if stage is not completed yet, isValid should be false*/
     _isValid = _isStageCompleted;
@@ -164,7 +164,8 @@ class WordleProvider with ChangeNotifier {
 
   /* Helper method
     Check if the character exist same as word length */
-  bool isComplete(List<CharacterModels> words, String word, int tried) {
+  bool isComplete(
+      List<CharacterModels> words, String word, int tried, int row) {
     int existCounter = 0;
     for (int i = 0; i < words.length; i++) {
       if (words[i].status == CharacterStatus.exist) {
@@ -172,7 +173,7 @@ class WordleProvider with ChangeNotifier {
       }
     }
 
-    return existCounter == word.length || existCounter == tried;
+    return existCounter == word.length || row == tried - 1;
   }
 
   Map<String, dynamic> countWordOccurences(String word) {

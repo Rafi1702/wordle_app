@@ -10,7 +10,6 @@ class WordFactsBottomModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final basetextStyle = Theme.of(context).textTheme.bodyLarge;
     final titleTextStyle = Theme.of(context).textTheme.titleLarge;
     return DraggableScrollableSheet(
       expand: false,
@@ -63,7 +62,7 @@ class WordFactsBottomModal extends StatelessWidget {
                                   Text('${e.key + 1}. '),
                                   Expanded(
                                     child: Text(
-                                      '${e.value.definition}',
+                                      e.value.definition,
                                     ),
                                   ),
                                 ],
