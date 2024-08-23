@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tebak_kata/domain/models/word_fact.dart';
-import 'package:tebak_kata/feature/wordle/widgets/modal_bottom.dart';
+import 'package:tebak_kata/feature/wordle/presentation/fact_words_page.dart';
 
 class WordFactsSection extends StatelessWidget {
   final List<WordFact> wordFacts;
@@ -24,13 +24,15 @@ class WordFactsSection extends StatelessWidget {
           ? const CircularProgressIndicator()
           : GestureDetector(
               onTap: () {
-                showModalBottomSheet<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return WordFactsBottomModal(
-                        wordFacts: wordFacts,
-                      );
-                    });
+                // showModalBottomSheet<void>(
+                //     context: context,
+                //     builder: (BuildContext context) {
+                //       return WordFactsBottomModal(
+                //         wordFacts: wordFacts,
+                //       );
+                //     });
+                Navigator.of(context)
+                    .pushNamed(FactWordsPage.route, arguments: wordFacts);
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(

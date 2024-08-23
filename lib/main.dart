@@ -7,6 +7,7 @@ import 'package:tebak_kata/data/remote/random_word_remote.dart';
 import 'package:tebak_kata/data/local/theme_local_storage.dart';
 import 'package:tebak_kata/domain/repository/settings_repository.dart';
 import 'package:tebak_kata/domain/repository/wordle_repository.dart';
+import 'package:tebak_kata/feature/wordle/presentation/fact_words_page.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
 
 import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
@@ -61,7 +62,8 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       lazy: false,
       create: (BuildContext context) {
-        return SettingsProvider(settingsRepository: context.read<SettingsRepository>());
+        return SettingsProvider(
+            settingsRepository: context.read<SettingsRepository>());
       },
       child: Builder(builder: (context) {
         final state = context.watch<SettingsProvider>();
@@ -76,6 +78,7 @@ class MyApp extends StatelessWidget {
                     },
                     child: const WordlePage(),
                   ),
+              FactWordsPage.route: (context) => const FactWordsPage(),
             });
       }),
     );
