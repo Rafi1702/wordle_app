@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tebak_kata/feature/settings/widgets/settings_dialog.dart';
 
 import 'package:tebak_kata/feature/wordle/widgets/keyboard.dart';
 
 import 'package:tebak_kata/feature/wordle/widgets/word_fact_section.dart';
-
-import 'package:tebak_kata/feature/settings/widgets/settings_dialog.dart';
 
 import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
 
@@ -60,7 +59,8 @@ class WordlePage extends StatelessWidget {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 32.0),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: List<Widget>.generate(
                                     state.guessedWord[triedIndex].length, (j) {
                                   return SizedBox(
@@ -68,7 +68,8 @@ class WordlePage extends StatelessWidget {
                                     width: 60.0,
                                     child: Card(
                                       color: colorHelper(
-                                          state.guessedWord[triedIndex][j].status,
+                                          state.guessedWord[triedIndex][j]
+                                              .status,
                                           context),
                                       child: Center(
                                         child: Text(
@@ -92,9 +93,12 @@ class WordlePage extends StatelessWidget {
                       Row(
                         children: [
                           const Spacer(
-                            flex: 3,
+                            flex: 2,
                           ),
                           ElevatedButton(
+                              style: const ButtonStyle(
+                                  fixedSize:
+                                      WidgetStatePropertyAll(Size(160, 30.0))),
                               onPressed: state.isValid
                                   ? () {
                                       if (state.isStageCompleted) {
@@ -111,14 +115,23 @@ class WordlePage extends StatelessWidget {
                                   state.isStageCompleted ? 'Next' : 'Submit')),
                           const Spacer(),
                           ElevatedButton(
-                              onPressed: state.hintMax == 0
-                                  ? null
-                                  : () {
-                                      context
-                                          .read<WordleProvider>()
-                                          .onHintTextTap();
-                                    },
-                              child: const Text('Hint Text'))
+                            style: const ButtonStyle(
+                              shape: WidgetStatePropertyAll(
+                                CircleBorder(),
+                              ),
+                            ),
+                            onPressed: state.hintMax == 0
+                                ? null
+                                : () {
+                                    context
+                                        .read<WordleProvider>()
+                                        .onHintTextTap();
+                                  },
+                            child: Icon(Icons.lightbulb_rounded,
+                                color:
+                                    state.hintMax == 0 ? null : Colors.yellow,
+                                size: 30.0),
+                          )
                         ],
                       ),
                       state.isStageCompleted
@@ -130,7 +143,7 @@ class WordlePage extends StatelessWidget {
                     ],
                   ),
                 );
-        
+
               case WordleStatus.error:
                 return const Center(
                   child: Text('Error'),

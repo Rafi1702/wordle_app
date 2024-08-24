@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/feature/settings/providers/settings_provider.dart';
+
 import 'package:tebak_kata/helper/app_theme.dart';
 
 class CustomDialog extends StatelessWidget {
@@ -68,7 +69,7 @@ class CustomDialog extends StatelessWidget {
                             circleColor2:
                                 AppTheme.sakuraTheme.colorScheme.secondary,
                             isSelected: settingState.selectedTheme ==
-                               Themes.sakuraTheme),
+                                Themes.sakuraTheme),
                       ),
                     ),
                     const SizedBox(width: 10.0),
@@ -88,8 +89,8 @@ class CustomDialog extends StatelessWidget {
                                 AppTheme.blueTheme.colorScheme.primary,
                             circleColor2:
                                 AppTheme.blueTheme.colorScheme.surface,
-                            isSelected: settingState.selectedTheme ==
-                                Themes.blueTheme),
+                            isSelected:
+                                settingState.selectedTheme == Themes.blueTheme),
                       ),
                     )
                   ],
@@ -106,11 +107,11 @@ class CustomDialog extends StatelessWidget {
 class DiagonalSplitCirclePainter extends CustomPainter {
   final Color circleColor1;
   final Color circleColor2;
-  final bool isSelected;
+  final bool? isSelected;
   DiagonalSplitCirclePainter(
       {required this.circleColor1,
       required this.circleColor2,
-      required this.isSelected});
+      this.isSelected});
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paintLeft = Paint()
@@ -146,7 +147,7 @@ class DiagonalSplitCirclePainter extends CustomPainter {
           false)
       ..close();
     canvas.drawPath(pathRight, paintRight);
-    if (isSelected) {
+    if (isSelected ?? false) {
       final Paint paintBorder = Paint()
         ..color = Colors.green
         ..style = PaintingStyle.stroke
@@ -161,3 +162,5 @@ class DiagonalSplitCirclePainter extends CustomPainter {
     return false;
   }
 }
+
+

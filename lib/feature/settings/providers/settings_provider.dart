@@ -9,14 +9,16 @@ import 'package:tebak_kata/helper/app_theme.dart';
 class SettingsProvider with ChangeNotifier {
   final SettingsRepository settingsRepository;
 
-  PlayerState _playerState = PlayerState.playing;
-  PlayerState get playerState => _playerState;
+  PlayerState _bgmPlayerState = PlayerState.playing;
+  PlayerState get bgmPlayerState => _bgmPlayerState;
 
   bool _isBgmActive = true;
   bool get isBgmActive => _isBgmActive;
 
-  final AudioPlayer _player = AudioPlayer();
+  final AudioPlayer _bgmPlayer = AudioPlayer();
   late StreamSubscription playerStateChange;
+
+  final AudioPlayer _translationPlayer = AudioPlayer();
 
   double _volume = 0.05;
   double get volume => _volume;
@@ -27,11 +29,11 @@ class SettingsProvider with ChangeNotifier {
   SettingsProvider({required this.settingsRepository}) {
     onInitialSettings();
     // playAudio();
-    // playerStateChange = _player.onPlayerStateChanged.listen((state) {
+    // playerStateChange = _bgmPlayer.onPlayerStateChanged.listen((state) {
     //   onPlayerStateChanged(state);
     // });
 
-    // playerStateChange = _player.onPlayerComplete.listen((state) {
+    // playerStateChange = _bgmPlayer.onPlayerComplete.listen((state) {
     //   playAudio();
     // });
   }
@@ -55,23 +57,19 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void onPlayerStateChanged(PlayerState state) {
-    _playerState = state;
+    _bgmPlayerState = state;
     notifyListeners();
   }
 
   Future<void> playAudio() async {
-    await _player.play(
+    await _bgmPlayer.play(
       AssetSource('arcade-party.mp3'),
       volume: _volume,
     );
   }
 
-  Future<void> onResumeAudio() async {
-    await _player.resume();
-  }
-
-  Future<void> onPauseAudio() async {
-    await _player.pause();
+  Future<void> playTranslation(String url) async {
+    await _translationPlayer.play(UrlSource(url));
   }
 
   Future<void> onVolumeChange(double value) async {
@@ -79,7 +77,7 @@ class SettingsProvider with ChangeNotifier {
 
     await Future.wait(
       [
-        _player.setVolume(_volume),
+        _bgmPlayer.setVolume(_volume),
         settingsRepository.setVolume(_volume),
       ],
     );
@@ -92,7 +90,7 @@ class SettingsProvider with ChangeNotifier {
 
     await Future.wait(
       [
-        _isBgmActive ? _player.setVolume(_volume) : _player.setVolume(0),
+        _isBgmActive ? _bgmPlayer.setVolume(_volume) : _bgmPlayer.setVolume(0),
         settingsRepository.setBgmValue(_isBgmActive),
       ],
     );

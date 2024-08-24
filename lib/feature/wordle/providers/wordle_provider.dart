@@ -56,15 +56,20 @@ class WordleProvider with ChangeNotifier {
   List<WordFact> _wordFact = [];
   List<WordFact> get wordFact => _wordFact;
 
+  List<String> _words = [];
+  List<String> get words => _words;
+
   WordleProvider({required this.wordleRepo}) {
     getWord();
   }
 
   Future<void> getWord() async {
     try {
-      // final data = await wordleRepo.getRandomWord();
-      const data = "POSE";
-      _word = data.toUpperCase();
+      final data = await wordleRepo.getRandomWord();
+
+      // const data = "pose";
+      _words = data;
+      _word = data[_random.nextInt(data.length)].toUpperCase();
       debugPrint(_word);
       for (int i = 0; i < _tried; i++) {
         _guessedWord.add([]);
@@ -106,7 +111,13 @@ class WordleProvider with ChangeNotifier {
   }
 
   Future<void> onSubmitButton() async {
-    _wordOccurences = countWordOccurences(_word);
+    // if (_guessedWord) _wordOccurences = countWordOccurences(_word);
+    final String concattedCharacter =
+        _guessedWord[_row].map((e) => e.character).join('');
+    if (!_words.contains(concattedCharacter)) {
+      debugPrint("Kata ga ada");
+      return;
+    }
 
     _guessedWord = changeCharacterStatus(guessedWord, _row, _wordOccurences);
 
@@ -166,14 +177,13 @@ class WordleProvider with ChangeNotifier {
     Check if the character exist same as word length */
   bool isComplete(
       List<CharacterModels> words, String word, int tried, int row) {
-    int existCounter = 0;
-    for (int i = 0; i < words.length; i++) {
-      if (words[i].status == CharacterStatus.exist) {
-        existCounter++;
-      }
-    }
-
-    return existCounter == word.length || row == tried - 1;
+    return _guessedWord[_row].fold<int>(
+                0,
+                (prev, element) => element.status == CharacterStatus.exist
+                    ? prev + 1
+                    : prev + 0) ==
+            _word.length ||
+        _row == _tried - 1;
   }
 
   Map<String, dynamic> countWordOccurences(String word) {

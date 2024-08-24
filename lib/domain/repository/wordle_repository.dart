@@ -1,16 +1,16 @@
 import 'package:tebak_kata/data/remote/facts_word_remote.dart';
-import 'package:tebak_kata/data/remote/random_word_remote.dart';
+import 'package:tebak_kata/data/local/random_word_remote.dart';
 import 'package:tebak_kata/domain/models/word_fact.dart';
 
 class WordleRepository {
-  final RandomWordRemote randomWordRemote;
+  final RandomWordLocal randomWordRemote;
   final FactsWordRemote factsWordRemote;
   WordleRepository(
       {required this.randomWordRemote, required this.factsWordRemote});
 
-  Future<String> getRandomWord() async {
+  Future<List<String>> getRandomWord() async {
     final word = await randomWordRemote.getWord();
-    return word;
+    return await Future.delayed(const Duration(seconds: 2), ()=>word);
   }
 
   Future<List<WordFact>> getWordFact(String word) async {

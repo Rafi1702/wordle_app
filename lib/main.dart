@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tebak_kata/data/local/audio_local_storage.dart';
 import 'package:tebak_kata/data/remote/facts_word_remote.dart';
-import 'package:tebak_kata/data/remote/random_word_remote.dart';
+import 'package:tebak_kata/data/local/random_word_remote.dart';
 import 'package:tebak_kata/data/local/theme_local_storage.dart';
 import 'package:tebak_kata/domain/repository/settings_repository.dart';
 import 'package:tebak_kata/domain/repository/wordle_repository.dart';
@@ -26,7 +26,7 @@ void main() async {
     ),
   );
 
-  final randomWordRemote = RandomWordRemote();
+  final randomWordRemote = RandomWordLocal();
   final factWordRemote = FactsWordRemote();
   final themeLocalStorage =
       ThemeLocalStorage(pref: prefsWithCache, key: themeKey);
