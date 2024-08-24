@@ -59,6 +59,9 @@ class WordleProvider with ChangeNotifier {
   List<String> _words = [];
   List<String> get words => _words;
 
+  bool _isWordsContain = true;
+  bool get isWordContain => _isWordsContain;
+
   WordleProvider({required this.wordleRepo}) {
     getWord();
   }
@@ -68,7 +71,7 @@ class WordleProvider with ChangeNotifier {
       final data = await wordleRepo.getRandomWord();
 
       // const data = "pose";
-      _words = data;
+      _words = data.map((e) => e.toUpperCase()).toList();
       _word = data[_random.nextInt(data.length)].toUpperCase();
       debugPrint(_word);
       for (int i = 0; i < _tried; i++) {
@@ -111,13 +114,15 @@ class WordleProvider with ChangeNotifier {
   }
 
   Future<void> onSubmitButton() async {
-    // if (_guessedWord) _wordOccurences = countWordOccurences(_word);
     final String concattedCharacter =
         _guessedWord[_row].map((e) => e.character).join('');
+        
     if (!_words.contains(concattedCharacter)) {
-      debugPrint("Kata ga ada");
+      _isWordsContain = false;
+      notifyListeners();
       return;
     }
+    _isWordsContain =true;
 
     _guessedWord = changeCharacterStatus(guessedWord, _row, _wordOccurences);
 

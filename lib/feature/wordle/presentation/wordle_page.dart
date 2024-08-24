@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/feature/settings/widgets/settings_dialog.dart';
 
@@ -105,6 +106,16 @@ class WordlePage extends StatelessWidget {
                                         Navigator.popAndPushNamed(
                                             context, WordlePage.route);
                                       } else {
+                                        if (!state.isWordContain) {
+                                          Fluttertoast.showToast(
+                                              msg: "Kata Tidak Ada",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.TOP,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Theme.of(context).colorScheme.onError,
+                                              textColor: Colors.white,
+                                              fontSize: 16.0);
+                                        }
                                         context
                                             .read<WordleProvider>()
                                             .onSubmitButton();

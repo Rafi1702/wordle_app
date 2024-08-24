@@ -10,7 +10,8 @@ class WordleRepository {
 
   Future<List<String>> getRandomWord() async {
     final word = await randomWordRemote.getWord();
-    return await Future.delayed(const Duration(seconds: 2), ()=>word);
+    return await Future.delayed(const Duration(seconds: 2),
+        () => word.where((e) => e.length == 4 || e.length == 5).toList());
   }
 
   Future<List<WordFact>> getWordFact(String word) async {
