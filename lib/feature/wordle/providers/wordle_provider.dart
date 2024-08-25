@@ -72,6 +72,7 @@ class WordleProvider with ChangeNotifier {
 
       // const data = "pose";
       _words = data.map((e) => e.toUpperCase()).toList();
+
       _word = data[_random.nextInt(data.length)].toUpperCase();
       debugPrint(_word);
       for (int i = 0; i < _tried; i++) {
@@ -116,13 +117,13 @@ class WordleProvider with ChangeNotifier {
   Future<void> onSubmitButton() async {
     final String concattedCharacter =
         _guessedWord[_row].map((e) => e.character).join('');
-        
+
     if (!_words.contains(concattedCharacter)) {
       _isWordsContain = false;
       notifyListeners();
       return;
     }
-    _isWordsContain =true;
+    _isWordsContain = true;
 
     _guessedWord = changeCharacterStatus(guessedWord, _row, _wordOccurences);
 
@@ -130,6 +131,10 @@ class WordleProvider with ChangeNotifier {
 
     /* _isValid depends on _isStageCompleted, if stage is not completed yet, isValid should be false*/
     _isValid = _isStageCompleted;
+
+    /* need to refresh _wordOccurences value for next submit */
+    _wordOccurences.clear();
+    _wordOccurences = countWordOccurences(_word);
 
     _row++;
     _column = 0;
@@ -182,13 +187,13 @@ class WordleProvider with ChangeNotifier {
     Check if the character exist same as word length */
   bool isComplete(
       List<CharacterModels> words, String word, int tried, int row) {
-    return _guessedWord[_row].fold<int>(
+    return words.fold<int>(
                 0,
                 (prev, element) => element.status == CharacterStatus.exist
                     ? prev + 1
                     : prev + 0) ==
-            _word.length ||
-        _row == _tried - 1;
+            word.length ||
+        row == _tried - 1;
   }
 
   Map<String, dynamic> countWordOccurences(String word) {
