@@ -27,7 +27,7 @@ class WordleProvider with ChangeNotifier {
   final Random _random = Random();
 
   //total row that user tried to guess
-  final int _tried = 6;
+  final int _tried = 5;
 
   String _word = "";
   Map<String, dynamic> _wordOccurences = {};
@@ -62,6 +62,9 @@ class WordleProvider with ChangeNotifier {
   bool _isWordsContain = true;
   bool get isWordContain => _isWordsContain;
 
+  List<String> _hintWord = [];
+  List<String> get hintWord => _hintWord;
+
   WordleProvider({required this.wordleRepo}) {
     getWord();
   }
@@ -73,8 +76,12 @@ class WordleProvider with ChangeNotifier {
       // const data = "pose";
       _words = data.map((e) => e.toUpperCase()).toList();
 
-      _word = data[_random.nextInt(data.length)].toUpperCase();
-      debugPrint(_word);
+      _word = "BEST";
+
+      for (int i = 0; i < _word.length; i++) {
+        _hintWord.add(' ');
+      }
+
       for (int i = 0; i < _tried; i++) {
         _guessedWord.add([]);
         for (int j = 0; j < _word.length; j++) {
@@ -96,7 +103,7 @@ class WordleProvider with ChangeNotifier {
   void onWordChanged(String value) {
     int length = _guessedWord[_row].length - 1;
 
-    if (_guessedWord[_row][length].character != null) {
+    if (_guessedWord[_row][length].character != null && _isValid) {
       return;
     }
 
@@ -161,8 +168,8 @@ class WordleProvider with ChangeNotifier {
   void onHintTextTap() {
     final generate = _random.nextInt(_word.length);
 
-    _guessedWord[_tried - 1][generate] = CharacterModels(
-        character: _word[generate], status: CharacterStatus.exist);
+    _hintWord[generate] = _word[generate];
+
     _hintMax--;
 
     notifyListeners();

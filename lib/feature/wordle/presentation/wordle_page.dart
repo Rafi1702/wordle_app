@@ -45,7 +45,32 @@ class WordlePage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Wrap(
+                          runSpacing: 10.0,
+                          spacing: 10.0,
+                          children: state.hintWord
+                              .map(
+                                (e) => Container(
+                                  width: 20.0,
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              width: 1.0,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface))),
+                                  child: Center(
+                                    child: Text(
+                                      e,
+                                      style:
+                                          Theme.of(context).textTheme.titleLarge,
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList()),
                       ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
