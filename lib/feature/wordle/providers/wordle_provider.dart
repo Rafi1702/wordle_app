@@ -62,7 +62,7 @@ class WordleProvider with ChangeNotifier {
   bool _isWordsContain = true;
   bool get isWordContain => _isWordsContain;
 
-  List<String> _hintWord = [];
+  final List<String> _hintWord = [];
   List<String> get hintWord => _hintWord;
 
   WordleProvider({required this.wordleRepo}) {

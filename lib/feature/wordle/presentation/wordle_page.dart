@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/feature/settings/widgets/settings_dialog.dart';
+import 'package:tebak_kata/feature/wordle/widgets/action_button_wordle.dart';
+import 'package:tebak_kata/feature/wordle/widgets/hint_word_section.dart';
 
 import 'package:tebak_kata/feature/wordle/widgets/keyboard.dart';
 
@@ -47,30 +49,9 @@ class WordlePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Wrap(
-                          runSpacing: 10.0,
-                          spacing: 10.0,
-                          children: state.hintWord
-                              .map(
-                                (e) => Container(
-                                  width: 20.0,
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              width: 1.0,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onSurface))),
-                                  child: Center(
-                                    child: Text(
-                                      e,
-                                      style:
-                                          Theme.of(context).textTheme.titleLarge,
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList()),
+                      HintWord(
+                        hintWord: state.hintWord,
+                      ),
                       ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -116,65 +97,11 @@ class WordlePage extends StatelessWidget {
                               ),
                             );
                           }),
-                      Row(
-                        children: [
-                          const Spacer(
-                            flex: 2,
-                          ),
-                          ElevatedButton(
-                              style: const ButtonStyle(
-                                  fixedSize: WidgetStatePropertyAll(
-                                Size(
-                                  160,
-                                  30.0,
-                                ),
-                              )),
-                              onPressed: state.isValid
-                                  ? () {
-                                      if (state.isStageCompleted) {
-                                        Navigator.popAndPushNamed(
-                                            context, WordlePage.route);
-                                      } else {
-                                        context
-                                            .read<WordleProvider>()
-                                            .onSubmitButton();
-                                      }
-                                      if (!state.isWordContain) {
-                                        Fluttertoast.showToast(
-                                            msg: "Kata Tidak Ada",
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.TOP,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor: Theme.of(context)
-                                                .colorScheme
-                                                .onError,
-                                            textColor: Colors.white,
-                                            fontSize: 16.0);
-                                      }
-                                    }
-                                  : null,
-                              child: Text(
-                                  state.isStageCompleted ? 'Next' : 'Submit')),
-                          const Spacer(),
-                          ElevatedButton(
-                            style: const ButtonStyle(
-                              shape: WidgetStatePropertyAll(
-                                CircleBorder(),
-                              ),
-                            ),
-                            onPressed: state.hintMax == 0
-                                ? null
-                                : () {
-                                    context
-                                        .read<WordleProvider>()
-                                        .onHintTextTap();
-                                  },
-                            child: Icon(Icons.lightbulb_rounded,
-                                color:
-                                    state.hintMax == 0 ? null : Colors.yellow,
-                                size: 30.0),
-                          )
-                        ],
+                      ActionButtonsWordle(
+                        hintMax: state.hintMax,
+                        isStageCompleted: state.isStageCompleted,
+                        isValid: state.isValid,
+                        isWordContain: state.isWordContain,
                       ),
                       state.isStageCompleted
                           ? WordFactsSection(
