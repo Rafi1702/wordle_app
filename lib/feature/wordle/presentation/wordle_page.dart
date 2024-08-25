@@ -98,8 +98,12 @@ class WordlePage extends StatelessWidget {
                           ),
                           ElevatedButton(
                               style: const ButtonStyle(
-                                  fixedSize:
-                                      WidgetStatePropertyAll(Size(160, 30.0))),
+                                  fixedSize: WidgetStatePropertyAll(
+                                Size(
+                                  160,
+                                  30.0,
+                                ),
+                              )),
                               onPressed: state.isValid
                                   ? () {
                                       if (state.isStageCompleted) {

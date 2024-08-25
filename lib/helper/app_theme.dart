@@ -25,7 +25,7 @@ class AppTheme {
     appBarOpacity: 0.90,
     subThemesData: const FlexSubThemesData(
       blendOnLevel: 30,
-      elevatedButtonRadius: 4.0,
+      elevatedButtonRadius: 8.0,
       useTextTheme: true,
     ),
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
@@ -39,7 +39,7 @@ class AppTheme {
     appBarOpacity: 0.90,
     subThemesData: const FlexSubThemesData(
       blendOnLevel: 30,
-      elevatedButtonRadius: 4.0,
+      elevatedButtonRadius: 8.0,
       useTextTheme: true,
     ),
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
