@@ -33,7 +33,7 @@ class WordleProvider with ChangeNotifier {
   String _word = "";
   Map<String, dynamic> _wordOccurences = {};
   List<String> _wordsData = [];
-  List<String> _tempWords = [];
+  final List<String> _tempWords = [];
 
   //status for fetching the data (random word)
   WordleStatus _status = WordleStatus.initial;

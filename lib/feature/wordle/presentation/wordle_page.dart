@@ -6,6 +6,7 @@ import 'package:tebak_kata/feature/wordle/widgets/action_button_wordle.dart';
 import 'package:tebak_kata/feature/wordle/widgets/hint_word_section.dart';
 
 import 'package:tebak_kata/feature/wordle/widgets/keyboard.dart';
+import 'package:tebak_kata/feature/wordle/widgets/loading_wordle.dart';
 
 import 'package:tebak_kata/feature/wordle/widgets/word_fact_section.dart';
 
@@ -40,7 +41,7 @@ class WordlePage extends StatelessWidget {
             switch (state.status) {
               case WordleStatus.initial:
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: LoadingWordleAnimation()
                 );
               case WordleStatus.success || WordleStatus.loading:
                 return Padding(
@@ -49,7 +50,7 @@ class WordlePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      HintWord(
+                      HintWordSection(
                         hintWord: state.hintWord,
                       ),
                       ListView.separated(

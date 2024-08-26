@@ -8,11 +8,12 @@ import 'package:tebak_kata/data/local/theme_local_storage.dart';
 import 'package:tebak_kata/domain/repository/settings_repository.dart';
 import 'package:tebak_kata/domain/repository/wordle_repository.dart';
 import 'package:tebak_kata/feature/wordle/presentation/fact_words_page.dart';
+import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
+import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
+
 import 'package:tebak_kata/helper/app_theme.dart';
 
-import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
 import 'package:tebak_kata/feature/settings/providers/settings_provider.dart';
-import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
 
 const themeKey = "__theme__";
 const volumeKey = "___volume___";

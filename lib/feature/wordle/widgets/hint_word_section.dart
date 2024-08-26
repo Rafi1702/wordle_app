@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class HintWord extends StatelessWidget {
+class HintWordSection extends StatelessWidget {
   final List<String> hintWord;
-  const HintWord({
+  const HintWordSection({
     required this.hintWord,
     super.key,
   });
