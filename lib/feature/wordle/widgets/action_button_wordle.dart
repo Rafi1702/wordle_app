@@ -7,13 +7,13 @@ import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
 class ActionButtonsWordle extends StatelessWidget {
   final bool isStageCompleted;
   final bool isValid;
-  final bool isWordContain;
+  final bool isWordNotAvailable;
   final int hintMax;
   const ActionButtonsWordle({
     super.key,
     required this.isStageCompleted,
     required this.isValid,
-    required this.isWordContain,
+    required this.isWordNotAvailable,
     required this.hintMax,
   });
 
@@ -38,17 +38,17 @@ class ActionButtonsWordle extends StatelessWidget {
                       Navigator.popAndPushNamed(context, WordlePage.route);
                     } else {
                       context.read<WordleProvider>().onSubmitButton();
-                    }
-                    if (isWordContain) {
-                      Fluttertoast.showToast(
-                          msg: "Kata Tidak Ada",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.TOP,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onError,
-                          textColor: Colors.white,
-                          fontSize: 16.0);
+                      if (isWordNotAvailable) {
+                        Fluttertoast.showToast(
+                            msg: "Kata Tidak Ada",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.TOP,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.onError,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+                      }
                     }
                   }
                 : null,
@@ -72,4 +72,3 @@ class ActionButtonsWordle extends StatelessWidget {
     );
   }
 }
-

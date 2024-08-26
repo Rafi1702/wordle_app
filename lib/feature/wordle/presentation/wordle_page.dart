@@ -101,7 +101,7 @@ class WordlePage extends StatelessWidget {
                         hintMax: state.hintMax,
                         isStageCompleted: state.isStageCompleted,
                         isValid: state.isValid,
-                        isWordContain: state.isWordContain,
+                        isWordNotAvailable: state.isWordNotAvailable,
                       ),
                       state.isStageCompleted
                           ? WordFactsSection(

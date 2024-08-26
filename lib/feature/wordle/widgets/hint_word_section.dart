@@ -24,7 +24,7 @@ class HintWord extends StatelessWidget {
                 child: Center(
                   child: Text(
                     e,
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
               ),

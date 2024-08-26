@@ -29,8 +29,11 @@ class WordleProvider with ChangeNotifier {
   //total row that user tried to guess
   final int _tried = 5;
 
+  //internal data
   String _word = "";
   Map<String, dynamic> _wordOccurences = {};
+  List<String> _wordsData = [];
+  List<String> _tempWords = [];
 
   //status for fetching the data (random word)
   WordleStatus _status = WordleStatus.initial;
@@ -56,11 +59,8 @@ class WordleProvider with ChangeNotifier {
   List<WordFact> _wordFact = [];
   List<WordFact> get wordFact => _wordFact;
 
-  List<String> _words = [];
-  List<String> get words => _words;
-
-  bool _isWordsContain = true;
-  bool get isWordContain => _isWordsContain;
+  bool _isWordsNotAvailable = false;
+  bool get isWordNotAvailable => _isWordsNotAvailable;
 
   final List<String> _hintWord = [];
   List<String> get hintWord => _hintWord;
@@ -74,12 +74,13 @@ class WordleProvider with ChangeNotifier {
       final data = await wordleRepo.getRandomWord();
 
       // const data = "pose";
-      _words = data.map((e) => e.toUpperCase()).toList();
+      _wordsData = data.map((e) => e.toUpperCase()).toList();
 
       _word = "BEST";
 
       for (int i = 0; i < _word.length; i++) {
         _hintWord.add(' ');
+        _tempWords.add(_word[i]);
       }
 
       for (int i = 0; i < _tried; i++) {
@@ -125,12 +126,13 @@ class WordleProvider with ChangeNotifier {
     final String concattedCharacter =
         _guessedWord[_row].map((e) => e.character).join('');
 
-    if (!_words.contains(concattedCharacter)) {
-      _isWordsContain = false;
+    if (!_wordsData.contains(concattedCharacter)) {
+      _isWordsNotAvailable = false;
       notifyListeners();
       return;
     }
-    _isWordsContain = true;
+
+    _isWordsNotAvailable = true;
 
     _guessedWord = changeCharacterStatus(guessedWord, _row, _wordOccurences);
 
@@ -166,9 +168,11 @@ class WordleProvider with ChangeNotifier {
   }
 
   void onHintTextTap() {
-    final generate = _random.nextInt(_word.length);
+    final generate = _random.nextInt(_tempWords.length);
 
     _hintWord[generate] = _word[generate];
+
+    _tempWords.remove(_word[generate]);
 
     _hintMax--;
 
