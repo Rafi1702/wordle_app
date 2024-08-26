@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class LoadingWordleAnimation extends StatefulWidget {
@@ -14,50 +16,54 @@ class _LoadingAnimationState extends State<LoadingWordleAnimation> {
     [0, 0, 0, 0],
     [0, 0, 0, 0],
   ];
-
+  int test = 0;
   final _column = 4;
   final _row = 4;
 
   int _currentColumn = 0;
-
-  Future<void> incrementGreenIndicatorIndex() async {
-    do {
-      for (int i = 0; i < indicators.length; i++) {
-        await Future.delayed(
-          const Duration(milliseconds: 900),
-        ).then((_) {
-          for (int j = 0; j <= i; j++) {
-            if (mounted) {
-              setState(() {
-                if (i == j) {
-                  indicators[i][j] = 1;
-                } else {
-                  indicators[i][j] = -1;
-                }
-              });
-            }
-          }
-        });
-        _currentColumn += 1;
+  late Timer timer;
+  Future<void> updateIndicators() async {
+    setState(() {});
+    for (int i = 0; i < indicators.length; i++) {
+      await Future.delayed(const Duration(milliseconds: 900));
+      for (int j = 0; j <= i; j++) {
+        if (i == j) {
+          indicators[i][j] = 1;
+        } else {
+          indicators[i][j] = -1;
+        }
       }
-      if (_currentColumn == _column) {
-        await Future.delayed(const Duration(milliseconds: 900));
-        indicators = [
-          [0, 0, 0, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0],
-        ];
-        _currentColumn = 0;
-      }
-    } while (mounted);
+      _currentColumn += 1;
+    }
+    if (_currentColumn == _column) {
+      indicators = [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ];
+      _currentColumn = 0;
+    }
   }
 
   @override
   void initState() {
     // TODO: implement initState
-    incrementGreenIndicatorIndex();
+    // incrementGreenIndicatorIndex();
+    timer = Timer.periodic(
+      const Duration(milliseconds: 100),
+      (timer) async {
+        await updateIndicators();
+      },
+    );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -82,13 +88,6 @@ class _LoadingAnimationState extends State<LoadingWordleAnimation> {
                         width: 20.0,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4.0),
-                          // color: columnIndex == greenIndicatorIndex &&
-                          //         rowIndex == greenIndicatorIndex
-                          //     ? Colors.green
-                          //     : columnIndex < greenIndicatorIndex &&
-                          //             greenIndicatorIndex == rowIndex
-                          //         ? Colors.yellow
-                          //         : Theme.of(context).colorScheme.onSurface,
                           color: indicators[rowIndex][columnIndex] == 1
                               ? Colors.green
                               : indicators[rowIndex][columnIndex] < 0
