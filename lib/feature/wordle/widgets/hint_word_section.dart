@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
 
 class HintWordSection extends StatelessWidget {
-  final List<String> hintWord;
   const HintWordSection({
-    required this.hintWord,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final hintWord = context
+        .select((WordleProvider wordleProvider) => wordleProvider.hintWord);
+
     return Wrap(
         runSpacing: 10.0,
         spacing: 10.0,

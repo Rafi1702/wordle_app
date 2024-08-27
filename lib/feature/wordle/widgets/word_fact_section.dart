@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:tebak_kata/domain/models/word_fact.dart';
+import 'package:provider/provider.dart';
+
 import 'package:tebak_kata/feature/wordle/presentation/fact_words_page.dart';
+import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
 
 class WordFactsSection extends StatelessWidget {
-  final List<WordFact> wordFacts;
-  final bool isLoading;
-  const WordFactsSection(
-      {super.key, required this.wordFacts, required this.isLoading});
+  const WordFactsSection({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,61 +20,60 @@ class WordFactsSection extends StatelessWidget {
         .titleLarge!
         .copyWith(color: Theme.of(context).colorScheme.onPrimary);
     final iconColor = Theme.of(context).colorScheme.onPrimary;
-    return Center(
-      child: isLoading
-          ? const CircularProgressIndicator()
-          : GestureDetector(
-              onTap: () {
-                // showModalBottomSheet<void>(
-                //     context: context,
-                //     builder: (BuildContext context) {
-                //       return WordFactsBottomModal(
-                //         wordFacts: wordFacts,
-                //       );
-                //     });
-                Navigator.of(context)
-                    .pushNamed(FactWordsPage.route, arguments: wordFacts);
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
+    return Builder(builder: (context) {
+      final status = context.select(
+          (WordleProvider wordleProvider) => wordleProvider.status);
+      final wordFact = context
+          .select((WordleProvider wordleProvider) => wordleProvider.wordFact);
+      return Center(
+        child: status == WordleStatus.loading
+            ? const CircularProgressIndicator()
+            : GestureDetector(
+                onTap: () {
+                  Navigator.of(context)
+                      .pushNamed(FactWordsPage.route, arguments: wordFact);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 8.0,
+                  ),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.0),
+                      color: Theme.of(context).colorScheme.onSurface),
+                  child: wordFact.isNotEmpty
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(wordFact.first.phonetic,
+                                    style: titleTextStyle),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.volume_up,
+                                    color: iconColor,
+                                  ),
+                                  onPressed: () {},
+                                )
+                              ],
+                            ),
+                            Text(wordFact.first.meanings.first.partOfSpeech,
+                                style: basetextStyle),
+                            Text(
+                                wordFact.first.meanings.first.definitions.first
+                                    .definition,
+                                style: basetextStyle),
+                          ],
+                        )
+                      : Text(
+                          'Belum ada faktanya',
+                          style: basetextStyle,
+                        ),
                 ),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4.0),
-                    color: Theme.of(context).colorScheme.onSurface),
-                child: wordFacts.isNotEmpty
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(wordFacts.first.phonetic,
-                                  style: titleTextStyle),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.volume_up,
-                                  color: iconColor,
-                                ),
-                                onPressed: () {},
-                              )
-                            ],
-                          ),
-                          Text(wordFacts.first.meanings.first.partOfSpeech,
-                              style: basetextStyle),
-                          Text(
-                              wordFacts.first.meanings.first.definitions.first
-                                  .definition,
-                              style: basetextStyle),
-                        ],
-                      )
-                    : Text(
-                        'Belum ada faktanya',
-                        style: basetextStyle,
-                      ),
               ),
-            ),
-    );
+      );
+    });
   }
 }

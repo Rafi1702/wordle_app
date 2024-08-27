@@ -62,7 +62,7 @@ class WordleProvider with ChangeNotifier {
   bool _isWordsNotAvailable = false;
   bool get isWordNotAvailable => _isWordsNotAvailable;
 
-  final List<String> _hintWord = [];
+  List<String> _hintWord = [];
   List<String> get hintWord => _hintWord;
 
   WordleProvider({required this.wordleRepo}) {
@@ -108,10 +108,23 @@ class WordleProvider with ChangeNotifier {
       return;
     }
 
-    _guessedWord[_row][_column] =
-        _guessedWord[_row][_column].copyWith(character: value);
+    _guessedWord = List.generate(
+      _guessedWord.length,
+      (row) {
+        return List.generate(
+          _guessedWord[row].length,
+          (column) {
+            if (row == _row && column == _column) {
+              return _guessedWord[row][column].copyWith(character: value);
+            } else {
+              return _guessedWord[row][column];
+            }
+          },
+        );
+      },
+    );
 
-    _column += 1;
+    _column++;
 
     if (_column == _word.length) {
       _isValid = true;
@@ -127,14 +140,13 @@ class WordleProvider with ChangeNotifier {
         _guessedWord[_row].map((e) => e.character).join('');
 
     if (!_wordsData.contains(concattedCharacter)) {
-      _isWordsNotAvailable = false;
+      _isWordsNotAvailable = true;
       notifyListeners();
       return;
     }
+    _isWordsNotAvailable = false;
 
-    _isWordsNotAvailable = true;
-
-    _guessedWord = changeCharacterStatus(guessedWord, _row, _wordOccurences);
+    _guessedWord = changeCharacterStatus(_guessedWord, _row, _wordOccurences);
 
     _isStageCompleted = isComplete(_guessedWord[_row], _word, _tried, _row);
 
@@ -160,8 +172,24 @@ class WordleProvider with ChangeNotifier {
     if (_column <= 0) {
       return;
     }
-    _guessedWord[_row][--_column] =
-        const CharacterModels(character: null, status: null);
+    _column--;
+    _guessedWord = List.generate(
+      _guessedWord.length,
+      (row) {
+        return List.generate(
+          _guessedWord[row].length,
+          (column) {
+            if (row == _row && column == _column) {
+              return _guessedWord[row][column].copyWith(character: '');
+            } else {
+              return _guessedWord[row][column];
+            }
+          },
+        );
+      },
+    );
+
+    print(_column);
     _isValid = false;
 
     notifyListeners();
@@ -170,6 +198,8 @@ class WordleProvider with ChangeNotifier {
   void onHintTextTap() {
     final generate = _random.nextInt(_tempWords.length);
 
+    _hintWord = List.generate(_hintWord.length,
+        (i) => i == generate ? _word[generate] : _hintWord[i]);
     _hintWord[generate] = _word[generate];
 
     _tempWords.remove(_word[generate]);
@@ -223,7 +253,13 @@ class WordleProvider with ChangeNotifier {
       List<List<CharacterModels>> guessedWord,
       int row,
       Map<String, dynamic> wordOccurences) {
-    final temp = guessedWord;
+    final temp = List.generate(
+      guessedWord.length,
+      (r) => List.generate(
+        guessedWord[r].length,
+        (c) => guessedWord[r][c],
+      ),
+    );
 
     for (int i = 0; i < _word.length; i++) {
       if (_word[i] == temp[row][i].character &&

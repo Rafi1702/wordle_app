@@ -80,6 +80,7 @@ class MyApp extends StatelessWidget {
                     child: const WordlePage(),
                   ),
               FactWordsPage.route: (context) => const FactWordsPage(),
+              // LoadingWordle.route: (context)=> const LoadingWordle(),
             });
       }),
     );

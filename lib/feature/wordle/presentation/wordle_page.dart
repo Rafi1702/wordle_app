@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/feature/settings/widgets/settings_dialog.dart';
 import 'package:tebak_kata/feature/wordle/widgets/action_button_wordle.dart';
+import 'package:tebak_kata/feature/wordle/widgets/guessed_words_grid.dart';
 import 'package:tebak_kata/feature/wordle/widgets/hint_word_section.dart';
 
 import 'package:tebak_kata/feature/wordle/widgets/keyboard.dart';
-import 'package:tebak_kata/feature/wordle/widgets/loading_wordle.dart';
 
 import 'package:tebak_kata/feature/wordle/widgets/word_fact_section.dart';
 
@@ -36,105 +36,49 @@ class WordlePage extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: Consumer<WordleProvider>(
-          builder: (context, state, child) {
-            switch (state.status) {
-              case WordleStatus.initial:
-                return const Center(
-                  child: LoadingWordleAnimation()
-                );
-              case WordleStatus.success || WordleStatus.loading:
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      HintWordSection(
-                        hintWord: state.hintWord,
-                      ),
-                      ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: state.guessedWord.length,
-                          separatorBuilder: (context, index) {
-                            return const SizedBox(
-                              height: 10.0,
-                            );
-                          },
-                          itemBuilder: (context, triedIndex) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 32.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: List<Widget>.generate(
-                                    state.guessedWord[triedIndex].length, (j) {
-                                  return SizedBox(
-                                    height: 60.0,
-                                    width: 60.0,
-                                    child: Card(
-                                      color: colorHelper(
-                                          state.guessedWord[triedIndex][j]
-                                              .status,
-                                          context),
-                                      child: Center(
-                                        child: Text(
-                                          state.guessedWord[triedIndex][j]
-                                                  .character ??
-                                              '',
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }),
-                              ),
-                            );
-                          }),
-                      ActionButtonsWordle(
-                        hintMax: state.hintMax,
-                        isStageCompleted: state.isStageCompleted,
-                        isValid: state.isValid,
-                        isWordNotAvailable: state.isWordNotAvailable,
-                      ),
-                      state.isStageCompleted
-                          ? WordFactsSection(
-                              wordFacts: state.wordFact,
-                              isLoading: state.status == WordleStatus.loading,
-                            )
-                          : const KeyBoard(),
-                    ],
-                  ),
-                );
+        child: Builder(builder: (context) {
+          final status = context
+              .select((WordleProvider wordleProvider) => wordleProvider.status);
+          switch (status) {
+            case WordleStatus.initial:
+              return Center(
+                child: Image.asset('assets/Blocks@1x-1.0s-200px-200px.gif'),
+              );
+            case WordleStatus.success || WordleStatus.loading:
+              return const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    HintWordSection(),
+                    GuessedWordsGrid(),
+                    ActionButtonsWordle(),
+                    BottomSection(),
+                  ],
+                ),
+              );
 
-              case WordleStatus.error:
-                return const Center(
-                  child: Text('Error'),
-                );
-              default:
-                return Container();
-            }
-          },
-        ),
+            case WordleStatus.error:
+              return const Center(
+                child: Text('Error'),
+              );
+            default:
+              return Container();
+          }
+        }),
       ),
     );
   }
+}
 
-  Color? colorHelper(CharacterStatus? status, BuildContext context) {
-    switch (status) {
-      case CharacterStatus.exist:
-        return Colors.green;
-      case CharacterStatus.existDifferentIndex:
-        return const Color(0xFFFFD700);
-      default:
-        return null;
-    }
+class BottomSection extends StatelessWidget {
+  const BottomSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isStageCompleted = context.select(
+        (WordleProvider wordleProvider) => wordleProvider.isStageCompleted);
+    return isStageCompleted ? const WordFactsSection() : const KeyBoard();
   }
 }
