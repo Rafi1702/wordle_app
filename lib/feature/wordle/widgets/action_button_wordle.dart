@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
@@ -15,23 +14,11 @@ class ActionButtonsWordle extends StatelessWidget {
     return Builder(builder: (context) {
       final isStageCompleted = context.select(
           (WordleProvider wordleProvider) => wordleProvider.isStageCompleted);
-      final isWordNotAvailable = context.select(
-          (WordleProvider wordleProvider) => wordleProvider.isWordNotAvailable);
+
       final isValid = context
           .select((WordleProvider wordleProvider) => wordleProvider.isValid);
       final hintMax = context
           .select((WordleProvider wordleProvider) => wordleProvider.hintMax);
-
-      if (isWordNotAvailable) {
-        Fluttertoast.showToast(
-            msg: "Kata Tidak Ada",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.TOP,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Theme.of(context).colorScheme.onError,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      }
 
       return Row(
         children: [

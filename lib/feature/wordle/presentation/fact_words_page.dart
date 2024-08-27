@@ -3,13 +3,14 @@ import 'package:tebak_kata/domain/models/word_fact.dart';
 
 class FactWordsPage extends StatelessWidget {
   static const route = '/fact_words';
- 
+
   const FactWordsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final titleTextStyle = Theme.of(context).textTheme.titleLarge;
-    final wordFacts = ModalRoute.of(context)?.settings.arguments as List<WordFact>;
+    final wordFacts =
+        ModalRoute.of(context)?.settings.arguments as List<WordFact>;
     return Scaffold(
       appBar: AppBar(title: const Text('Word Facts')),
       body: ListView(
@@ -45,7 +46,6 @@ class FactWordsPage extends StatelessWidget {
                       return Chip(label: Text(e.partOfSpeech));
                     }).toList(),
                   ),
-      
                   ...wordFacts[wordFactsIndex].meanings.map(
                     (e) {
                       return Column(
@@ -70,10 +70,6 @@ class FactWordsPage extends StatelessWidget {
                           ]);
                     },
                   ),
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children:
-                  // ),
                 ],
               );
             },

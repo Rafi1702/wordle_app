@@ -164,6 +164,9 @@ class WordleProvider with ChangeNotifier {
 
     //after state updated and the stage completed, function will fetch word facts
     if (_isStageCompleted) {
+      _hintMax = 0;
+      _hintWord = _word.split('');
+      notifyListeners();
       await getWordFacts();
     }
   }
@@ -189,7 +192,6 @@ class WordleProvider with ChangeNotifier {
       },
     );
 
-    print(_column);
     _isValid = false;
 
     notifyListeners();
