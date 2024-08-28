@@ -52,56 +52,62 @@ class BottomSection extends StatelessWidget {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4.0),
                       color: Theme.of(context).colorScheme.onSurface),
-                  child: wordFact.isNotEmpty
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(wordFact.first.phonetic,
-                                    style: titleTextStyle),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.volume_up,
-                                    color: iconColor,
-                                  ),
-                                  onPressed: () {},
-                                )
-                              ],
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(wordFact.first.phonetic, style: titleTextStyle),
+                          IconButton(
+                            icon: Icon(
+                              Icons.volume_up,
+                              color: iconColor,
                             ),
-                            Text(wordFact.first.meanings.first.partOfSpeech,
-                                style: basetextStyle),
-                            Text(
-                                wordFact.first.meanings.first.definitions.first
-                                    .definition,
-                                style: basetextStyle),
-                          ],
-                        )
-                      : Text(
-                          'Belum ada faktanya',
-                          style: basetextStyle,
-                        ),
+                            onPressed: () {},
+                          )
+                        ],
+                      ),
+                      Text(wordFact.first.meanings.first.partOfSpeech,
+                          style: basetextStyle),
+                      Text(
+                          wordFact.first.meanings.first.definitions.first
+                              .definition,
+                          style: basetextStyle),
+                    ],
+                  ),
                 ),
               );
             case WordleStatus.error:
-              return Column(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: () {
-                      context.read<WordleProvider>().getWordFacts();
-                    },
-                  ),
-                  Text(wordFactError),
-                ],
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4.0),
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                child: Column(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.refresh,
+                          color: Colors.black, size: 40),
+                      onPressed: () {
+                        context.read<WordleProvider>().getWordFacts();
+                      },
+                    ),
+                    Text(
+                      wordFactError,
+                      style: basetextStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               );
             default:
               return Container();
           }
         }
-      return const KeyBoard();
+        return const KeyBoard();
       },
-      
     );
   }
 }

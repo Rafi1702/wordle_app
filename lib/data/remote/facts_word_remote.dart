@@ -11,15 +11,18 @@ class FactsWordRemote {
           .get(
             Uri.parse("https://api.dictionaryapi.dev/api/v2/entries/en/$word"),
           )
-          .timeout(const Duration(seconds: 3));
+          .timeout(const Duration(seconds: 10));
 
-      return (jsonDecode(response.body) as List)
-          .map((e) => WordFact.fromJson(e))
-          .toList();
+      final decodedResponse = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return (decodedResponse as List)
+            .map((e) => WordFact.fromJson(e))
+            .toList();
+      }
+      throw Exception('Penjelasan kata tidak dapat ditemukan');
     } on SocketException catch (_) {
       throw Exception('Koneksi Internet Bermasalah');
-    } catch (e) {
-      throw Exception(e.toString());
     }
   }
 }

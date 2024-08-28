@@ -86,7 +86,7 @@ class WordleProvider with ChangeNotifier {
       // const data = "pose";
       _wordsData = data.map((e) => e.toUpperCase()).toList();
 
-      _word = "BEST";
+      _word = _wordsData[_random.nextInt(_wordsData.length)];
 
       for (int i = 0; i < _word.length; i++) {
         _hintWord.add(' ');
@@ -106,6 +106,7 @@ class WordleProvider with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       _wordStatus = WordleStatus.error;
+      print(e);
       _generateWordError = e.toString();
       notifyListeners();
     }
@@ -226,6 +227,7 @@ class WordleProvider with ChangeNotifier {
   }
 
   Future<void> getWordFacts() async {
+    _wordFactStatus = WordleStatus.initial;
     notifyListeners();
     try {
       final data = await wordleRepo.getWordFact(_word);
@@ -234,6 +236,7 @@ class WordleProvider with ChangeNotifier {
       _wordFactStatus = WordleStatus.success;
       notifyListeners();
     } catch (e) {
+      debugPrint(e.toString());
       _wordFactStatus = WordleStatus.error;
       _wordFactError = e.toString();
       notifyListeners();
