@@ -14,6 +14,7 @@ import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
 import 'package:tebak_kata/helper/app_theme.dart';
 
 import 'package:tebak_kata/feature/settings/providers/settings_provider.dart';
+import 'package:tebak_kata/home_page.dart';
 
 const themeKey = "__theme__";
 const volumeKey = "___volume___";
@@ -71,19 +72,20 @@ class MyApp extends StatelessWidget {
           selector: (_, settingsProvider) => settingsProvider.selectedTheme,
           builder: (context, state, child) {
             return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme: state.getThemeData,
-                routes: {
-                  WordlePage.route: (context) => ChangeNotifierProvider(
-                        create: (BuildContext context) {
-                          return WordleProvider(
-                              wordleRepo: context.read<WordleRepository>());
-                        },
-                        child: const WordlePage(),
-                      ),
-                  FactWordsPage.route: (context) => const FactWordsPage(),
-                  // LoadingWordle.route: (context)=> const LoadingWordle(),
-                });
+              debugShowCheckedModeBanner: false,
+              theme: state.getThemeData,
+              routes: {
+                HomePage.route: (context) => const HomePage(),
+                WordlePage.route: (context) => ChangeNotifierProvider(
+                      create: (BuildContext context) {
+                        return WordleProvider(
+                            wordleRepo: context.read<WordleRepository>());
+                      },
+                      child: const WordlePage(),
+                    ),
+                FactWordsPage.route: (context) => const FactWordsPage(),
+              },
+            );
           }),
     );
   }

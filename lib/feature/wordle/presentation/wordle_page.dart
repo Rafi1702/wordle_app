@@ -7,14 +7,12 @@ import 'package:tebak_kata/feature/wordle/widgets/action_button_wordle.dart';
 import 'package:tebak_kata/feature/wordle/widgets/guessed_words_grid.dart';
 import 'package:tebak_kata/feature/wordle/widgets/hint_word_section.dart';
 
-import 'package:tebak_kata/feature/wordle/widgets/keyboard.dart';
-
 import 'package:tebak_kata/feature/wordle/widgets/word_fact_section.dart';
 
 import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
 
 class WordlePage extends StatefulWidget {
-  static const route = '/';
+  static const route = '/wordle_page';
   const WordlePage({super.key});
 
   @override
@@ -71,7 +69,7 @@ class _WordlePageState extends State<WordlePage> {
       body: SafeArea(
         child: Selector<WordleProvider, WordleStatus>(
           selector: (_, state) => state.status,
-          shouldRebuild: (prev, current) => prev != current ,
+          shouldRebuild: (prev, current) => prev != current,
           builder: (context, status, __) => Builder(builder: (context) {
             switch (status) {
               case WordleStatus.initial:
@@ -100,16 +98,5 @@ class _WordlePageState extends State<WordlePage> {
         ),
       ),
     );
-  }
-}
-
-class BottomSection extends StatelessWidget {
-  const BottomSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final bool isStageCompleted = context.select(
-        (WordleProvider wordleProvider) => wordleProvider.isStageCompleted);
-    return isStageCompleted ? const WordFactsSection() : const KeyBoard();
   }
 }
