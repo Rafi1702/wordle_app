@@ -33,7 +33,7 @@ class WordleProvider with ChangeNotifier {
   String _word = "";
   Map<String, dynamic> _wordOccurences = {};
   List<String> _wordsData = [];
-  final List<String> _tempWords = [];
+  final List<int> _tempWords = [];
 
   //status for fetching the data (random word)
   WordleStatus _status = WordleStatus.initial;
@@ -62,9 +62,6 @@ class WordleProvider with ChangeNotifier {
   bool _isWordsAvailable = true;
   bool get isWordAvailable => _isWordsAvailable;
 
-  int _forceBuild = 0;
-  int get forceBuild => _forceBuild;
-
   List<String> _hintWord = [];
   List<String> get hintWord => _hintWord;
 
@@ -83,7 +80,7 @@ class WordleProvider with ChangeNotifier {
 
       for (int i = 0; i < _word.length; i++) {
         _hintWord.add(' ');
-        _tempWords.add(_word[i]);
+        _tempWords.add(i);
       }
 
       for (int i = 0; i < _tried; i++) {
@@ -144,11 +141,10 @@ class WordleProvider with ChangeNotifier {
         _guessedWord[_row].map((e) => e.character).join('');
     debugPrint(concattedCharacter);
 
-    final bool newValue = _wordsData.contains(concattedCharacter);
-    _isWordsAvailable = newValue;
+    _isWordsAvailable = _wordsData.contains(concattedCharacter);
 
+    //Stop when _isWordsAvailable false, it wont go to next row
     if (!_isWordsAvailable) {
-      _forceBuild++;
       notifyListeners();
       return;
     }
@@ -167,15 +163,13 @@ class WordleProvider with ChangeNotifier {
     _row++;
     _column = 0;
 
-    notifyListeners();
-
-    //after state updated and the stage completed, function will fetch word facts
     if (_isStageCompleted) {
       _hintMax = 0;
       _hintWord = _word.split('');
-      notifyListeners();
-      await getWordFacts();
+      await _getWordFacts();
     }
+
+    notifyListeners();
   }
 
   void onDeleteCharacter() {
@@ -206,27 +200,32 @@ class WordleProvider with ChangeNotifier {
   }
 
   void onHintTextTap() {
-    final generate = _random.nextInt(_tempWords.length);
+    final generateRandomIndex = _tempWords[_random.nextInt(_tempWords.length)];
 
-    _hintWord = List.generate(_hintWord.length,
-        (i) => i == generate ? _word[generate] : _hintWord[i]);
-    _hintWord[generate] = _tempWords[generate];
+    _hintWord = List.generate(
+        _hintWord.length,
+        (i) => i == generateRandomIndex
+            ? _word[generateRandomIndex]
+            : _hintWord[i]);
 
-    _tempWords.remove(_word[generate]);
+    _tempWords.remove(generateRandomIndex);
 
     _hintMax--;
 
     notifyListeners();
   }
 
-  Future<void> getWordFacts() async {
+  Future<void> _getWordFacts() async {
     _status = WordleStatus.loading;
+
     notifyListeners();
 
     try {
       final data = await wordleRepo.getWordFact(_word);
       _wordFact = data;
+
       _status = WordleStatus.success;
+
       notifyListeners();
     } catch (e) {
       _status = WordleStatus.success;

@@ -67,23 +67,24 @@ class MyApp extends StatelessWidget {
         return SettingsProvider(
             settingsRepository: context.read<SettingsRepository>());
       },
-      child: Builder(builder: (context) {
-        final state = context.watch<SettingsProvider>();
-        return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: state.selectedTheme.getThemeData,
-            routes: {
-              WordlePage.route: (context) => ChangeNotifierProvider(
-                    create: (BuildContext context) {
-                      return WordleProvider(
-                          wordleRepo: context.read<WordleRepository>());
-                    },
-                    child: const WordlePage(),
-                  ),
-              FactWordsPage.route: (context) => const FactWordsPage(),
-              // LoadingWordle.route: (context)=> const LoadingWordle(),
-            });
-      }),
+      child: Selector<SettingsProvider, Themes>(
+          selector: (_, settingsProvider) => settingsProvider.selectedTheme,
+          builder: (context, state, child) {
+            return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: state.getThemeData,
+                routes: {
+                  WordlePage.route: (context) => ChangeNotifierProvider(
+                        create: (BuildContext context) {
+                          return WordleProvider(
+                              wordleRepo: context.read<WordleRepository>());
+                        },
+                        child: const WordlePage(),
+                      ),
+                  FactWordsPage.route: (context) => const FactWordsPage(),
+                  // LoadingWordle.route: (context)=> const LoadingWordle(),
+                });
+          }),
     );
   }
 }

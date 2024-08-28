@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
+
 import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
 
 class ActionButtonsWordle extends StatelessWidget {
@@ -34,13 +34,11 @@ class ActionButtonsWordle extends StatelessWidget {
                 ),
               )),
               onPressed: isValid
-                  ? () {
-                      if (isStageCompleted) {
-                        Navigator.popAndPushNamed(context, WordlePage.route);
-                      } else {
-                        context.read<WordleProvider>().onSubmitButton();
-                      }
-                    }
+                  ? isStageCompleted
+                      ? () => Navigator.of(context).pushNamed('/')
+                      : () {
+                          context.read<WordleProvider>().onSubmitButton();
+                        }
                   : null,
               child: Text(isStageCompleted ? 'Next' : 'Submit')),
           const Spacer(),

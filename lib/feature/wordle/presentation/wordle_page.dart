@@ -32,7 +32,6 @@ class _WordlePageState extends State<WordlePage> {
 
   void wordleListeners() {
     if (!wordleProvider.isWordAvailable) {
-      print('masuk');
       Fluttertoast.showToast(
           msg: "Kata Tidak Ada",
           toastLength: Toast.LENGTH_SHORT,
