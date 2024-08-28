@@ -36,8 +36,12 @@ class WordleProvider with ChangeNotifier {
   final List<int> _tempWords = [];
 
   //status for fetching the data (random word)
-  WordleStatus _status = WordleStatus.initial;
-  WordleStatus get status => _status;
+  WordleStatus _wordStatus = WordleStatus.initial;
+  WordleStatus get wordStatus => _wordStatus;
+
+  //status for fetching facts of word
+  WordleStatus _wordFactStatus = WordleStatus.initial;
+  WordleStatus get wordFactStatus => _wordFactStatus;
 
   List<List<CharacterModels>> _guessedWord = [];
   List<List<CharacterModels>> get guessedWord => _guessedWord;
@@ -98,10 +102,10 @@ class WordleProvider with ChangeNotifier {
       }
       _wordOccurences = countWordOccurences(_word);
 
-      _status = WordleStatus.success;
+      _wordStatus = WordleStatus.success;
       notifyListeners();
     } catch (e) {
-      _status = WordleStatus.error;
+      _wordStatus = WordleStatus.error;
       _generateWordError = e.toString();
       notifyListeners();
     }
@@ -222,15 +226,15 @@ class WordleProvider with ChangeNotifier {
   }
 
   Future<void> getWordFacts() async {
-    _status = WordleStatus.loading;
     notifyListeners();
     try {
       final data = await wordleRepo.getWordFact(_word);
       _wordFact = data;
       _wordFactError = "";
-      _status = WordleStatus.success;
+      _wordFactStatus = WordleStatus.success;
       notifyListeners();
     } catch (e) {
+      _wordFactStatus = WordleStatus.error;
       _wordFactError = e.toString();
       notifyListeners();
     }

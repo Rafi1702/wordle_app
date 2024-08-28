@@ -13,16 +13,26 @@ class HomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                width: double.infinity,
-                height: 60.0,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(WordlePage.route);
-                  },
-                  icon: Icon(Icons.play_arrow_rounded,
-                      color: Theme.of(context).colorScheme.onPrimary),
-                  label: const Text('Main'),
+              ElevatedButton.icon(
+                style: const ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(Size(
+                  200.0,
+                  60.0,
+                ))),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(WordlePage.route);
+                },
+                icon: const Icon(
+                  Icons.play_arrow_rounded,
+                  color: Colors.white,
+                  size: 40.0,
+                ),
+                label: Text(
+                  'Main',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineMedium!
+                      .copyWith(fontWeight: FontWeight.w900),
                 ),
               ),
             ],

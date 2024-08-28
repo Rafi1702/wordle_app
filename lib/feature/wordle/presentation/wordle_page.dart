@@ -68,7 +68,7 @@ class _WordlePageState extends State<WordlePage> {
       ),
       body: SafeArea(
         child: Selector<WordleProvider, WordleStatus>(
-          selector: (_, state) => state.status,
+          selector: (_, state) => state.wordStatus,
           shouldRebuild: (prev, current) => prev != current,
           builder: (context, status, __) => Builder(builder: (context) {
             switch (status) {
