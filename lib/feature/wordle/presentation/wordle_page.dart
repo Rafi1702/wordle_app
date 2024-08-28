@@ -71,7 +71,7 @@ class _WordlePageState extends State<WordlePage> {
       body: SafeArea(
         child: Selector<WordleProvider, WordleStatus>(
           selector: (_, state) => state.status,
-          shouldRebuild: (prev, current) => prev != current,
+          shouldRebuild: (prev, current) => prev != current ,
           builder: (context, status, __) => Builder(builder: (context) {
             switch (status) {
               case WordleStatus.initial:
@@ -93,10 +93,6 @@ class _WordlePageState extends State<WordlePage> {
                   ),
                 );
 
-              case WordleStatus.error:
-                return const Center(
-                  child: Text('Error'),
-                );
               default:
                 return Container();
             }

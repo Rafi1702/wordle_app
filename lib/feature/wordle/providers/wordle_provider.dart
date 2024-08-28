@@ -65,6 +65,12 @@ class WordleProvider with ChangeNotifier {
   List<String> _hintWord = [];
   List<String> get hintWord => _hintWord;
 
+  String _generateWordError = '';
+  String get generateWordError => _generateWordError;
+
+  String _wordFactError = '';
+  String get wordFactError => _wordFactError;
+
   WordleProvider({required this.wordleRepo}) {
     getWord();
   }
@@ -95,8 +101,8 @@ class WordleProvider with ChangeNotifier {
       _status = WordleStatus.success;
       notifyListeners();
     } catch (e) {
-      debugPrint(e.toString());
       _status = WordleStatus.error;
+      _generateWordError = e.toString();
       notifyListeners();
     }
   }
@@ -166,7 +172,7 @@ class WordleProvider with ChangeNotifier {
     if (_isStageCompleted) {
       _hintMax = 0;
       _hintWord = _word.split('');
-      await _getWordFacts();
+      await getWordFacts();
     }
 
     notifyListeners();
@@ -215,20 +221,17 @@ class WordleProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _getWordFacts() async {
+  Future<void> getWordFacts() async {
     _status = WordleStatus.loading;
-
     notifyListeners();
-
     try {
       final data = await wordleRepo.getWordFact(_word);
       _wordFact = data;
-
+      _wordFactError = "";
       _status = WordleStatus.success;
-
       notifyListeners();
     } catch (e) {
-      _status = WordleStatus.success;
+      _wordFactError = e.toString();
       notifyListeners();
     }
   }

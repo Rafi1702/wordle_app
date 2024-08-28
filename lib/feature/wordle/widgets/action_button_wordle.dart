@@ -35,7 +35,7 @@ class ActionButtonsWordle extends StatelessWidget {
               )),
               onPressed: isValid
                   ? isStageCompleted
-                      ? () => Navigator.of(context).pushNamed('/')
+                      ? () => Navigator.of(context).pushReplacementNamed('/')
                       : () {
                           context.read<WordleProvider>().onSubmitButton();
                         }
