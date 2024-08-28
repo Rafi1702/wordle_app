@@ -59,8 +59,11 @@ class WordleProvider with ChangeNotifier {
   List<WordFact> _wordFact = [];
   List<WordFact> get wordFact => _wordFact;
 
-  bool _isWordsNotAvailable = false;
-  bool get isWordNotAvailable => _isWordsNotAvailable;
+  bool _isWordsAvailable = true;
+  bool get isWordAvailable => _isWordsAvailable;
+
+  int _forceBuild = 0;
+  int get forceBuild => _forceBuild;
 
   List<String> _hintWord = [];
   List<String> get hintWord => _hintWord;
@@ -102,6 +105,7 @@ class WordleProvider with ChangeNotifier {
   }
 
   void onWordChanged(String value) {
+    _isWordsAvailable = true;
     int length = _guessedWord[_row].length - 1;
 
     if (_guessedWord[_row][length].character != null && _isValid) {
@@ -138,13 +142,16 @@ class WordleProvider with ChangeNotifier {
   Future<void> onSubmitButton() async {
     final String concattedCharacter =
         _guessedWord[_row].map((e) => e.character).join('');
+    debugPrint(concattedCharacter);
 
-    if (!_wordsData.contains(concattedCharacter)) {
-      _isWordsNotAvailable = true;
+    final bool newValue = _wordsData.contains(concattedCharacter);
+    _isWordsAvailable = newValue;
+
+    if (!_isWordsAvailable) {
+      _forceBuild++;
       notifyListeners();
       return;
     }
-    _isWordsNotAvailable = false;
 
     _guessedWord = changeCharacterStatus(_guessedWord, _row, _wordOccurences);
 
@@ -172,6 +179,7 @@ class WordleProvider with ChangeNotifier {
   }
 
   void onDeleteCharacter() {
+    _isWordsAvailable = true;
     if (_column <= 0) {
       return;
     }
@@ -202,7 +210,7 @@ class WordleProvider with ChangeNotifier {
 
     _hintWord = List.generate(_hintWord.length,
         (i) => i == generate ? _word[generate] : _hintWord[i]);
-    _hintWord[generate] = _word[generate];
+    _hintWord[generate] = _tempWords[generate];
 
     _tempWords.remove(_word[generate]);
 

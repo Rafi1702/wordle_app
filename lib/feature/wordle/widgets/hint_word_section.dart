@@ -20,14 +20,16 @@ class HintWordSection extends StatelessWidget {
               (e) => Container(
                 width: 20.0,
                 decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            width: 1.0,
-                            color: Theme.of(context).colorScheme.onSurface))),
+                  border: Border(
+                    bottom: BorderSide(
+                        width: 4.0,
+                        color: Theme.of(context).colorScheme.onSurface),
+                  ),
+                ),
                 child: Center(
                   child: Text(
                     e,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.w900),
                   ),
                 ),
               ),

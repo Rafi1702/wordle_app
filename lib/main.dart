@@ -18,6 +18,7 @@ import 'package:tebak_kata/feature/settings/providers/settings_provider.dart';
 const themeKey = "__theme__";
 const volumeKey = "___volume___";
 const bgmKey = "___bgm___";
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final SharedPreferencesWithCache prefsWithCache =

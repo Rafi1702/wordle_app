@@ -13,9 +13,42 @@ import 'package:tebak_kata/feature/wordle/widgets/word_fact_section.dart';
 
 import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
 
-class WordlePage extends StatelessWidget {
+class WordlePage extends StatefulWidget {
   static const route = '/';
   const WordlePage({super.key});
+
+  @override
+  State<WordlePage> createState() => _WordlePageState();
+}
+
+class _WordlePageState extends State<WordlePage> {
+  late final WordleProvider wordleProvider;
+  @override
+  void initState() {
+    wordleProvider = context.read<WordleProvider>();
+    wordleProvider.addListener(wordleListeners);
+    super.initState();
+  }
+
+  void wordleListeners() {
+    if (!wordleProvider.isWordAvailable) {
+      print('masuk');
+      Fluttertoast.showToast(
+          msg: "Kata Tidak Ada",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Theme.of(context).colorScheme.onError,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
+
+  @override
+  void dispose() {
+    wordleProvider.removeListener(wordleListeners);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,50 +70,39 @@ class WordlePage extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: Builder(builder: (context) {
-          final status = context
-              .select((WordleProvider wordleProvider) => wordleProvider.status);
-          final isWordNotAvailable = context.select(
-              (WordleProvider wordleProvider) =>
-                  wordleProvider.isWordNotAvailable);
-          if (isWordNotAvailable) {
-            Fluttertoast.showToast(
-                msg: "Kata Tidak Ada",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.TOP,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Theme.of(context).colorScheme.onError,
-                textColor: Colors.white,
-                fontSize: 16.0);
-          }
-          switch (status) {
-            case WordleStatus.initial:
-              return Center(
-                child: Image.asset('assets/Blocks@1x-1.0s-200px-200px.gif'),
-              );
-            case WordleStatus.success || WordleStatus.loading:
-              return const Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    HintWordSection(),
-                    GuessedWordsGrid(),
-                    ActionButtonsWordle(),
-                    BottomSection(),
-                  ],
-                ),
-              );
+        child: Selector<WordleProvider, WordleStatus>(
+          selector: (_, state) => state.status,
+          shouldRebuild: (prev, current) => prev != current,
+          builder: (context, status, __) => Builder(builder: (context) {
+            switch (status) {
+              case WordleStatus.initial:
+                return Center(
+                  child: Image.asset('assets/Blocks@1x-1.0s-200px-200px.gif'),
+                );
+              case WordleStatus.success || WordleStatus.loading:
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      HintWordSection(),
+                      GuessedWordsGrid(),
+                      ActionButtonsWordle(),
+                      BottomSection(),
+                    ],
+                  ),
+                );
 
-            case WordleStatus.error:
-              return const Center(
-                child: Text('Error'),
-              );
-            default:
-              return Container();
-          }
-        }),
+              case WordleStatus.error:
+                return const Center(
+                  child: Text('Error'),
+                );
+              default:
+                return Container();
+            }
+          }),
+        ),
       ),
     );
   }
