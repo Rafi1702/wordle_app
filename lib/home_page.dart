@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tebak_kata/feature/settings/widgets/settings_dialog.dart';
 import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
+import 'package:tebak_kata/feature/wordle/widgets/letter_card.dart';
 
 class HomePage extends StatelessWidget {
   static const route = '/';
@@ -38,7 +39,9 @@ class HomePage extends StatelessWidget {
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineMedium!
-                                    .copyWith(fontWeight: FontWeight.w900)),
+                                    .copyWith(
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.black)),
                           ),
                           Expanded(
                             child: Container(
@@ -74,7 +77,13 @@ class HomePage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog<void>(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                const _HelpDialog(),
+                          );
+                        },
                         style: const ButtonStyle(
                           shape: WidgetStatePropertyAll(
                             CircleBorder(),
@@ -84,10 +93,10 @@ class HomePage extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          showDialog<double>(
+                          showDialog<void>(
                             context: context,
                             builder: (BuildContext context) =>
-                                const CustomDialog(),
+                                const SettingsDialog(),
                           );
                         },
                         style: const ButtonStyle(
@@ -105,6 +114,163 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _HelpDialog extends StatelessWidget {
+  const _HelpDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Text('Help',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineLarge!
+                      .copyWith(fontWeight: FontWeight.w900)),
+            ),
+            const Divider(
+              thickness: 1.5,
+            ),
+            const _HelpPoint(
+              number: '1',
+              explanationPoint: 'Guess the Word: ',
+              explanation:
+                  'goal is to guess a hidden 5-letter word within 6 attempts.',
+            ),
+            const SizedBox(height: 8.0),
+            const _HelpPoint(
+              number: '2',
+              explanationPoint: 'Enter a Word: ',
+              explanation: 'Type a valid 5-letter word and press "Enter".',
+            ),
+            const SizedBox(height: 8.0),
+            const Column(
+              children: [
+                _HelpPoint(
+                  number: '3',
+                  explanationPoint: 'Get Feedback: ',
+                  explanation: '',
+                ),
+                Row(
+                  children: [
+                    LetterCard(
+                      letter: 'P',
+                    ),
+                    LetterCard(
+                      letter: 'A',
+                      color: Colors.green,
+                    ),
+                    LetterCard(
+                      letter: 'I',
+                    ),
+                    LetterCard(
+                      letter: 'N',
+                    ),
+                  ],
+                ),
+                Text('Green: The letter is correct and in the right position.'),
+                Row(
+                  children: [
+                    LetterCard(
+                      letter: 'S',
+                    ),
+                    LetterCard(
+                      letter: 'H',
+                    ),
+                    LetterCard(
+                      letter: 'O',
+                      color: Colors.yellow,
+                    ),
+                    LetterCard(
+                      letter: 'W',
+                    ),
+                  ],
+                ),
+                Text(
+                    'Yellow: The letter is in the word but in the wrong position.'),
+                Row(
+                  children: [
+                    LetterCard(
+                      letter: 'R',
+                    ),
+                    LetterCard(
+                      letter: 'A',
+                    ),
+                    LetterCard(
+                      letter: 'I',
+                    ),
+                    LetterCard(
+                      letter: 'N',
+                    ),
+                  ],
+                ),
+                Text('Gray: The letter is not in the word at all.')
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            const _HelpPoint(
+              number: '4',
+              explanationPoint: 'Guess the Word: ',
+              explanation:
+                  'goal is to guess a hidden 5-letter word within 6 attempts.',
+            ),
+            const SizedBox(height: 8.0),
+            const _HelpPoint(
+              number: '5',
+              explanationPoint: 'Win or Lose: ',
+              explanation:
+                  'If you guess the word correctly within 6 tries, you win! If not, the correct word will be revealed.',
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HelpPoint extends StatelessWidget {
+  final String number;
+  final String explanationPoint;
+  final String explanation;
+  const _HelpPoint({
+    required this.number,
+    required this.explanationPoint,
+    required this.explanation,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('$number. '),
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: explanationPoint,
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelLarge!
+                      .copyWith(fontWeight: FontWeight.w800),
+                ),
+                TextSpan(text: explanation),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

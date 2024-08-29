@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
+import 'package:tebak_kata/feature/wordle/widgets/letter_card.dart';
 
 class GuessedWordsGrid extends StatelessWidget {
   const GuessedWordsGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final guessedWord = context
-        .select<WordleProvider, List<List<CharacterModels>>>((wordleProvider) => wordleProvider.guessedWord);
+    final guessedWord =
+        context.select<WordleProvider, List<List<CharacterModels>>>(
+            (wordleProvider) => wordleProvider.guessedWord);
     return ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -25,21 +27,10 @@ class GuessedWordsGrid extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children:
                   List<Widget>.generate(guessedWord[triedIndex].length, (j) {
-                return SizedBox(
-                  height: 60.0,
-                  width: 60.0,
-                  child: Card(
-                    color:
-                        colorHelper(guessedWord[triedIndex][j].status, context),
-                    child: Center(
-                      child: Text(
-                        guessedWord[triedIndex][j].character ?? '',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                return LetterCard(
+                  letter: guessedWord[triedIndex][j].character ?? '',
+                  color: colorHelper(
+                    guessedWord[triedIndex][j].status,
                   ),
                 );
               }),
@@ -49,7 +40,8 @@ class GuessedWordsGrid extends StatelessWidget {
   }
 }
 
-Color? colorHelper(CharacterStatus? status, BuildContext context) {
+
+Color? colorHelper(CharacterStatus? status) {
   switch (status) {
     case CharacterStatus.exist:
       return Colors.green;

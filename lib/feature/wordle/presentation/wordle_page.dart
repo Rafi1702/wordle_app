@@ -60,7 +60,7 @@ class _WordlePageState extends State<WordlePage> {
             onPressed: () {
               showDialog<double>(
                 context: context,
-                builder: (BuildContext context) => const CustomDialog(),
+                builder: (BuildContext context) => const SettingsDialog(),
               );
             },
           )

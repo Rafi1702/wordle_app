@@ -6,8 +6,8 @@ import 'package:tebak_kata/feature/settings/providers/settings_provider.dart';
 
 import 'package:tebak_kata/helper/app_theme.dart';
 
-class CustomDialog extends StatelessWidget {
-  const CustomDialog({
+class SettingsDialog extends StatelessWidget {
+  const SettingsDialog({
     super.key,
   });
 
