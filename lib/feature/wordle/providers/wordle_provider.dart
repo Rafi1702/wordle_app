@@ -83,11 +83,11 @@ class WordleProvider with ChangeNotifier {
     try {
       final data = await wordleRepo.getRandomWord();
 
-      // const data = "pose";
       _wordsData = data.map((e) => e.toUpperCase()).toList();
 
       _word = _wordsData[_random.nextInt(_wordsData.length)];
 
+      debugPrint(_word);
       for (int i = 0; i < _word.length; i++) {
         _hintWord.add(' ');
         _tempWords.add(i);
@@ -106,7 +106,7 @@ class WordleProvider with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       _wordStatus = WordleStatus.error;
-      print(e);
+
       _generateWordError = e.toString();
       notifyListeners();
     }
@@ -150,7 +150,6 @@ class WordleProvider with ChangeNotifier {
   Future<void> onSubmitButton() async {
     final String concattedCharacter =
         _guessedWord[_row].map((e) => e.character).join('');
-    debugPrint(concattedCharacter);
 
     _isWordsAvailable = _wordsData.contains(concattedCharacter);
 
@@ -168,7 +167,7 @@ class WordleProvider with ChangeNotifier {
     _isValid = _isStageCompleted;
 
     /* need to refresh _wordOccurences value for next submit */
-    _wordOccurences.clear();
+
     _wordOccurences = countWordOccurences(_word);
 
     _row++;
@@ -236,7 +235,6 @@ class WordleProvider with ChangeNotifier {
       _wordFactStatus = WordleStatus.success;
       notifyListeners();
     } catch (e) {
-      debugPrint(e.toString());
       _wordFactStatus = WordleStatus.error;
       _wordFactError = e.toString();
       notifyListeners();
@@ -265,6 +263,7 @@ class WordleProvider with ChangeNotifier {
         wordOccurences[word[i]] = 1;
       }
     }
+
     return wordOccurences;
   }
 
@@ -286,36 +285,21 @@ class WordleProvider with ChangeNotifier {
         temp[row][i] = temp[row][i].copyWith(status: CharacterStatus.exist);
         wordOccurences[temp[row][i].character!] =
             wordOccurences[temp[row][i].character!] - 1;
-      } else if (_word.contains(temp[row][i].character!) &&
+        continue;
+      }
+    }
+
+    for (int i = 0; i < _word.length; i++) {
+      if (_word.contains(temp[row][i].character!) &&
           _word[i] != temp[row][i].character &&
           wordOccurences[temp[row][i].character] != 0) {
         temp[row][i] =
             temp[row][i].copyWith(status: CharacterStatus.existDifferentIndex);
         wordOccurences[temp[row][i].character!] =
             wordOccurences[temp[row][i].character!] - 1;
-      } else {
-        temp[row][i] = temp[row][i].copyWith(status: CharacterStatus.notExist);
       }
     }
+
     return temp;
   }
 }
-
-
-  // Map<String, Map<String, dynamic>> countWordOccurences(String word) {
-  //   var wordOccurences = <String, Map<String, dynamic>>{};
-  //   for (int i = 0; i < word.length; i++) {
-  //     if (wordOccurences.containsKey(word[i])) {
-  //       wordOccurences[word[i]]?["count"] =
-  //           wordOccurences[word[i]]?["count"] + 1;
-  //       wordOccurences[word[i]]
-  //           ?["list"] = List.from(wordOccurences[word[i]]?["list"])..add(i);
-  //     } else {
-  //       wordOccurences[word[i]] = {};
-  //       wordOccurences[word[i]]?["count"] = 1;
-  //       wordOccurences[word[i]]?["list"] = [i];
-  //     }
-  //   }
-
-  //   return wordOccurences;
-  // }
