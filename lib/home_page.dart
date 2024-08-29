@@ -130,13 +130,23 @@ class _HelpDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Align(
-              alignment: Alignment.center,
-              child: Text('Help',
+            Row(
+              children: [
+                Text(
+                  'Help',
                   style: Theme.of(context)
                       .textTheme
                       .headlineLarge!
-                      .copyWith(fontWeight: FontWeight.w900)),
+                      .copyWith(fontWeight: FontWeight.w900),
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.close_rounded),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
             ),
             const Divider(
               thickness: 1.5,
