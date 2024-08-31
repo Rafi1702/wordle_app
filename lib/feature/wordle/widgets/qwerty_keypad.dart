@@ -9,6 +9,8 @@ class KeyPad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width / 12;
+
     return GestureDetector(
       onTap: () => onTapped(qwertyKey.name.toUpperCase()),
       child: Container(
@@ -19,7 +21,7 @@ class KeyPad extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.0),
         ),
         height: 50.0,
-        width: qwertyKey == QwertyKey.delete ? 50.0 : 33.0,
+        width: qwertyKey == QwertyKey.delete ? width + 20 : width,
         child: Center(
           child: Text(
             qwertyKey == QwertyKey.delete

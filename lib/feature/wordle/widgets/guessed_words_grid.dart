@@ -21,25 +21,21 @@ class GuessedWordsGrid extends StatelessWidget {
           );
         },
         itemBuilder: (context, triedIndex) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children:
-                  List<Widget>.generate(guessedWord[triedIndex].length, (j) {
-                return LetterCard(
-                  letter: guessedWord[triedIndex][j].character ?? '',
-                  color: colorHelper(
-                    guessedWord[triedIndex][j].status,
-                  ),
-                );
-              }),
-            ),
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:
+                List<Widget>.generate(guessedWord[triedIndex].length, (j) {
+              return LetterCard(
+                letter: guessedWord[triedIndex][j].character ?? '',
+                color: colorHelper(
+                  guessedWord[triedIndex][j].status,
+                ),
+              );
+            }),
           );
         });
   }
 }
-
 
 Color? colorHelper(CharacterStatus? status) {
   switch (status) {

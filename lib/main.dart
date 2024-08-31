@@ -25,6 +25,7 @@ void main() async {
   final SharedPreferencesWithCache prefsWithCache =
       await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(
+        
       allowList: <String>{themeKey, volumeKey, bgmKey},
     ),
   );
