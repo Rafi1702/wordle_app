@@ -207,10 +207,10 @@ class WordleProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void onHintButton() async{
-    if (hintMax <= 0) {
-      _isStageCompleted = true;
-      await getWordFacts();
+  void onHintButton() async {
+    final currentHintMax = _hintMax;
+    if (currentHintMax <= 0) {
+      _hintMax = -1;
       notifyListeners();
       return;
     }
@@ -229,15 +229,19 @@ class WordleProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void onGiveUpButton() async {
+    _isStageCompleted = true;
+    await getWordFacts();
+    notifyListeners();
+  }
+
   Future<void> getWordFacts() async {
-    _wordFactStatus = WordleStatus.initial;
+    _wordFactStatus = WordleStatus.loading;
     notifyListeners();
     try {
       final data = await wordleRepo.getWordFact(_word);
       _wordFact = data;
       _wordFactError = "";
-      _hintMax = -1;
-      _hintWord = _word.split('');
       _wordFactStatus = WordleStatus.success;
       notifyListeners();
     } catch (e) {

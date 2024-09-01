@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tebak_kata/feature/settings/widgets/settings_dialog.dart';
+import 'package:tebak_kata/feature/wordle/presentation/wordle2_page.dart';
 import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
 import 'package:tebak_kata/feature/wordle/widgets/letter_card.dart';
 
@@ -22,7 +23,7 @@ class HomePage extends StatelessWidget {
                 InkWell(
                   splashFactory: NoSplash.splashFactory,
                   onTap: () {
-                    Navigator.of(context).pushNamed(WordlePage.route);
+                    Navigator.of(context).pushNamed(WordlePage2.route);
                   },
                   child: Container(
                       width: 300.0,

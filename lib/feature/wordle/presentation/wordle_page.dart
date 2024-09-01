@@ -41,6 +41,26 @@ class _WordlePageState extends State<WordlePage> {
           textColor: Colors.white,
           fontSize: 16.0);
     }
+
+    if (wordleProvider.hintMax <= 0) {
+      print('masuk');
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              actions: [
+                TextButton(
+                  child: Text('Yes'),
+                  onPressed: () {
+                    wordleProvider.onGiveUpButton();
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+      return;
+    }
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tebak_kata/data/local/audio_local_storage.dart';
@@ -7,9 +8,9 @@ import 'package:tebak_kata/data/local/random_word_remote.dart';
 import 'package:tebak_kata/data/local/theme_local_storage.dart';
 import 'package:tebak_kata/domain/repository/settings_repository.dart';
 import 'package:tebak_kata/domain/repository/wordle_repository.dart';
+import 'package:tebak_kata/feature/wordle/cubit/wordle_cubit.dart';
 import 'package:tebak_kata/feature/wordle/presentation/fact_words_page.dart';
-import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
-import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
+import 'package:tebak_kata/feature/wordle/presentation/wordle2_page.dart';
 
 import 'package:tebak_kata/helper/app_theme.dart';
 
@@ -25,7 +26,6 @@ void main() async {
   final SharedPreferencesWithCache prefsWithCache =
       await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(
-        
       allowList: <String>{themeKey, volumeKey, bgmKey},
     ),
   );
@@ -77,13 +77,19 @@ class MyApp extends StatelessWidget {
               theme: state.getThemeData,
               routes: {
                 HomePage.route: (context) => const HomePage(),
-                WordlePage.route: (context) => ChangeNotifierProvider(
-                      create: (BuildContext context) {
-                        return WordleProvider(
-                            wordleRepo: context.read<WordleRepository>());
-                      },
-                      child: const WordlePage(),
+                WordlePage2.route: (context) => BlocProvider(
+                      create: (context) => WordleCubit(
+                          wordleRepository: context.read<WordleRepository>())
+                        ..getWord(),
+                      child: const WordlePage2(),
                     ),
+                // WordlePage.route: (context) => ChangeNotifierProvider(
+                //       create: (BuildContext context) {
+                //         return WordleProvider(
+                //             wordleRepo: context.read<WordleRepository>());
+                //       },
+                //       child: const WordlePage(),
+                //     ),
                 FactWordsPage.route: (context) => const FactWordsPage(),
               },
             );

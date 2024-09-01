@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:tebak_kata/feature/wordle/cubit/wordle_cubit.dart';
 
 import 'package:tebak_kata/feature/wordle/presentation/fact_words_page.dart';
-import 'package:tebak_kata/feature/wordle/providers/wordle_provider.dart';
-import 'package:tebak_kata/feature/wordle/widgets/keyboard.dart';
+import 'package:tebak_kata/feature/wordle/widget2/keyboard.dart';
+
+
 
 class BottomSection extends StatelessWidget {
   const BottomSection({
@@ -21,27 +24,24 @@ class BottomSection extends StatelessWidget {
         .titleLarge!
         .copyWith(color: Theme.of(context).colorScheme.onPrimary);
     final iconColor = Theme.of(context).colorScheme.onPrimary;
-    return Builder(
-      builder: (context) {
-        final wordFactStatus = context.select(
-            (WordleProvider wordleProvider) => wordleProvider.wordFactStatus);
-        final wordFact = context
-            .select((WordleProvider wordleProvider) => wordleProvider.wordFact);
-        final wordFactError = context.select(
-            (WordleProvider wordleProvider) => wordleProvider.wordFactError);
-        final bool isStageCompleted = context.select(
-            (WordleProvider wordleProvider) => wordleProvider.isStageCompleted);
-        if (isStageCompleted) {
-          switch (wordFactStatus) {
-            case WordleStatus.loading:
+    return BlocBuilder<WordleCubit, WordleState>(
+      buildWhen: (previous, current) =>
+          previous.wordFactStatus != current.wordFactStatus ||
+          previous.wordFact != current.wordFact ||
+          previous.wordFactError != current.wordFactError ||
+          previous.isStageCompleted != current.isStageCompleted,
+      builder: (context, state) {
+        if (state.isStageCompleted) {
+          switch (state.wordFactStatus) {
+            case WordlePageStatus.loading:
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            case WordleStatus.success:
+            case WordlePageStatus.success:
               return GestureDetector(
                 onTap: () {
-                  Navigator.of(context)
-                      .pushNamed(FactWordsPage.route, arguments: wordFact);
+                  Navigator.of(context).pushNamed(FactWordsPage.route,
+                      arguments: state.wordFact);
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -67,17 +67,17 @@ class BottomSection extends StatelessWidget {
                           )
                         ],
                       ),
-                      Text(wordFact.first.meanings.first.partOfSpeech,
+                      Text(state.wordFact.first.meanings.first.partOfSpeech,
                           style: basetextStyle),
                       Text(
-                          wordFact.first.meanings.first.definitions.first
+                          state.wordFact.first.meanings.first.definitions.first
                               .definition,
                           style: basetextStyle),
                     ],
                   ),
                 ),
               );
-            case WordleStatus.error:
+            case WordlePageStatus.error:
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 margin: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -91,11 +91,11 @@ class BottomSection extends StatelessWidget {
                       icon: const Icon(Icons.refresh,
                           color: Colors.black, size: 40),
                       onPressed: () {
-                        context.read<WordleProvider>().getWordFacts();
+                        context.read<WordleCubit>().getWordFacts();
                       },
                     ),
                     Text(
-                      wordFactError,
+                      state.wordFactError,
                       style: basetextStyle,
                       textAlign: TextAlign.center,
                     ),

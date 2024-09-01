@@ -21,7 +21,7 @@ class ActionButtonsWordle extends StatelessWidget {
           .select((WordleProvider wordleProvider) => wordleProvider.isValid);
       final hintMax = context
           .select((WordleProvider wordleProvider) => wordleProvider.hintMax);
-
+      print("build");
       return Row(
         children: [
           const Spacer(
@@ -35,7 +35,7 @@ class ActionButtonsWordle extends StatelessWidget {
                   30.0,
                 ),
               )),
-              onPressed: isValid
+              onPressed: isValid && wordFactStatus != WordleStatus.loading
                   ? isStageCompleted
                       ? () => Navigator.of(context)
                           .pushReplacementNamed(WordlePage.route)
@@ -44,7 +44,15 @@ class ActionButtonsWordle extends StatelessWidget {
                         }
                   : null,
               child: wordFactStatus == WordleStatus.loading
-                  ? const CircularProgressIndicator()
+                  ? const SizedBox(
+                      height: 20.0,
+                      width: 20.0,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
                   : Text(isStageCompleted ? 'Next' : 'Submit')),
           const Spacer(),
           ElevatedButton(
@@ -53,13 +61,13 @@ class ActionButtonsWordle extends StatelessWidget {
                 CircleBorder(),
               ),
             ),
-            onPressed: hintMax < 0
+            onPressed: isStageCompleted
                 ? null
                 : () {
                     context.read<WordleProvider>().onHintButton();
                   },
-            child: Icon(hintMax == 0 ? Icons.flag : Icons.lightbulb_rounded,
-                color: hintMax == 0 ? Colors.white : Colors.yellow, size: 30.0),
+            child: Icon(hintMax <= 0 ? Icons.flag : Icons.lightbulb_rounded,
+                color: hintMax <= 0 ? Colors.white : Colors.yellow, size: 30.0),
           )
         ],
       );
