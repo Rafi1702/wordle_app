@@ -29,6 +29,7 @@ class WordleState extends Equatable {
     List<String>? hintWord,
     String? wordFactError,
     List<WordFact>? wordFact,
+    bool? isHintAvailable,
   }) =>
       WordleState(
         wordFactStatus: wordFactStatus ?? this.wordFactStatus,
@@ -58,12 +59,11 @@ class WordleState extends Equatable {
 
   @override
   List<Object> get props => [
-    
+        hintLimit,
         wordFactStatus,
         randomWordStatus,
         guessedWord,
         isValid,
-        hintLimit,
         isStageCompleted,
         isWordAvailable,
         hintWord,

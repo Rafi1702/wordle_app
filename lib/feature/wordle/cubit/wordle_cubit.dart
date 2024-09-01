@@ -148,6 +148,11 @@ class WordleCubit extends Cubit<WordleState> {
           guessedWord: updatedGuessedWord,
           isValid: updatedIsValid),
     );
+
+    if (state.isStageCompleted) {
+      final fillHint = _word.split('');
+      return emit(state.copyWith(hintWord: fillHint));
+    }
   }
 
   void onDeleteCharacter() {
@@ -157,6 +162,7 @@ class WordleCubit extends Cubit<WordleState> {
       return;
     }
     _column--;
+
     final updatedGuessedWord = List.generate(
       state.guessedWord.length,
       (row) {
@@ -179,10 +185,13 @@ class WordleCubit extends Cubit<WordleState> {
   }
 
   void onHintButton() async {
-    if (state.hintLimit <= 0) {
-      emit(state.copyWith(hintLimit: -1));
-      return;
+    // final condition = state.hintLimit < 0;
+
+    final updatedHintLimit = state.hintLimit - 1;
+    if (updatedHintLimit < 0) {
+      return emit(state.copyWith(hintLimit: updatedHintLimit));
     }
+
     final generateRandomIndex = _tempWords[_random.nextInt(_tempWords.length)];
 
     final updatedHintWord = List.generate(
@@ -193,7 +202,6 @@ class WordleCubit extends Cubit<WordleState> {
 
     _tempWords.remove(generateRandomIndex);
 
-    final updatedHintLimit = state.hintLimit - 1;
     debugPrint(updatedHintLimit.toString());
 
     emit(

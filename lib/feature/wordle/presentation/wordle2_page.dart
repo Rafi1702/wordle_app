@@ -16,6 +16,7 @@ class WordlePage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
+      print('rebuild mulu');
       return MultiBlocListener(
         listeners: [
           BlocListener<WordleCubit, WordleState>(
@@ -35,9 +36,7 @@ class WordlePage2 extends StatelessWidget {
             },
           ),
           BlocListener<WordleCubit, WordleState>(
-            listenWhen: (prev, current) =>
-                prev.hintLimit != current.hintLimit ||
-                prev.hintLimit == current.hintLimit && current.hintLimit != 0,
+            listenWhen: (prev, current) => prev.hintLimit!=current.hintLimit,
             listener: (context, state) {
               final cubit = context.read<WordleCubit>();
               if (state.hintLimit <= 0) {
