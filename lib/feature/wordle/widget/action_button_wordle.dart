@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:tebak_kata/feature/wordle/cubit/wordle_cubit.dart';
-import 'package:tebak_kata/feature/wordle/presentation/wordle2_page.dart';
+import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
 
 class ActionButtonsWordle extends StatelessWidget {
   const ActionButtonsWordle({

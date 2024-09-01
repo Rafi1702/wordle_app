@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tebak_kata/feature/wordle/cubit/wordle_cubit.dart';
 
 import 'package:tebak_kata/feature/wordle/presentation/fact_words_page.dart';
-import 'package:tebak_kata/feature/wordle/widget2/keyboard.dart';
+import 'package:tebak_kata/feature/wordle/widget/keyboard.dart';
 
 
 

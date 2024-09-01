@@ -10,7 +10,7 @@ import 'package:tebak_kata/domain/repository/settings_repository.dart';
 import 'package:tebak_kata/domain/repository/wordle_repository.dart';
 import 'package:tebak_kata/feature/wordle/cubit/wordle_cubit.dart';
 import 'package:tebak_kata/feature/wordle/presentation/fact_words_page.dart';
-import 'package:tebak_kata/feature/wordle/presentation/wordle2_page.dart';
+import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
 
 import 'package:tebak_kata/helper/app_theme.dart';
 
@@ -83,13 +83,6 @@ class MyApp extends StatelessWidget {
                         ..getWord(),
                       child: const WordlePage2(),
                     ),
-                // WordlePage.route: (context) => ChangeNotifierProvider(
-                //       create: (BuildContext context) {
-                //         return WordleProvider(
-                //             wordleRepo: context.read<WordleRepository>());
-                //       },
-                //       child: const WordlePage(),
-                //     ),
                 FactWordsPage.route: (context) => const FactWordsPage(),
               },
             );

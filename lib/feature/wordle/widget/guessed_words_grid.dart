@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:tebak_kata/feature/wordle/cubit/wordle_cubit.dart';
-import 'package:tebak_kata/feature/wordle/widget2/letter_card.dart';
+import 'package:tebak_kata/feature/wordle/widget/letter_card.dart';
 
 class GuessedWordsGrid extends StatelessWidget {
   const GuessedWordsGrid({super.key});

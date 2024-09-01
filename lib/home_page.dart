@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tebak_kata/feature/settings/widgets/settings_dialog.dart';
-import 'package:tebak_kata/feature/wordle/presentation/wordle2_page.dart';
-
-import 'package:tebak_kata/feature/wordle/widgets/letter_card.dart';
+import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
+import 'package:tebak_kata/feature/wordle/widget/letter_card.dart';
 
 class HomePage extends StatelessWidget {
   static const route = '/';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tebak_kata/feature/wordle/cubit/wordle_cubit.dart';
 
-import 'package:tebak_kata/feature/wordle/widget2/qwerty_keypad.dart';
+import 'package:tebak_kata/feature/wordle/widget/qwerty_keypad.dart';
 import 'package:tebak_kata/helper/qwerty.dart';
 
 class KeyBoard extends StatelessWidget {
