@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:tebak_kata/feature/wordle/cubit/wordle_cubit.dart';
-import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
-
+import 'package:tebak_kata/feature/wordle/presentation/wordle2_page.dart';
 
 class ActionButtonsWordle extends StatelessWidget {
   const ActionButtonsWordle({
@@ -36,7 +35,7 @@ class ActionButtonsWordle extends StatelessWidget {
                         state.wordFactStatus != WordlePageStatus.loading
                     ? state.isStageCompleted
                         ? () => Navigator.of(context)
-                            .pushReplacementNamed(WordlePage.route)
+                            .pushReplacementNamed(WordlePage2.route)
                         : () {
                             context.read<WordleCubit>().onSubmitButton();
                           }
@@ -64,8 +63,9 @@ class ActionButtonsWordle extends StatelessWidget {
                   : () {
                       context.read<WordleCubit>().onHintButton();
                     },
-              child: Icon(state.hintLimit <= 0 ? Icons.flag : Icons.lightbulb_rounded,
-                  color:state.hintLimit <= 0 ? Colors.white : Colors.yellow,
+              child: Icon(
+                  state.hintLimit <= 0 ? Icons.flag : Icons.lightbulb_rounded,
+                  color: state.hintLimit <= 0 ? Colors.white : Colors.yellow,
                   size: 30.0),
             )
           ],

@@ -100,18 +100,17 @@ class WordleCubit extends Cubit<WordleState> {
         );
       },
     );
-    _column++;
-
-    if (_column == _word.length) {
-      return emit(
-          state.copyWith(isValid: true, guessedWord: updatedGuessedWord));
-    }
-
     emit(
       state.copyWith(
         guessedWord: updatedGuessedWord,
       ),
     );
+
+    _column++;
+    if (_column == _word.length) {
+      return emit(
+          state.copyWith(isValid: true, guessedWord: updatedGuessedWord));
+    }
   }
 
   Future<void> onSubmitButton() async {
@@ -121,6 +120,7 @@ class WordleCubit extends Cubit<WordleState> {
     final updatedIsWordsAvailable = _wordsData.contains(concattedCharacter);
 
     emit(state.copyWith(isWordAvailable: updatedIsWordsAvailable));
+
     //Stop when _isWordsAvailable false, it wont go to next row
     if (!state.isWordAvailable) {
       return;
@@ -152,6 +152,11 @@ class WordleCubit extends Cubit<WordleState> {
 
   void onDeleteCharacter() {
     emit(state.copyWith(isWordAvailable: true));
+
+    if (_column <= 0) {
+      return;
+    }
+    _column--;
     final updatedGuessedWord = List.generate(
       state.guessedWord.length,
       (row) {
@@ -167,14 +172,6 @@ class WordleCubit extends Cubit<WordleState> {
         );
       },
     );
-    if (_column <= 0) {
-      _column = 0;
-
-      return emit(state.copyWith(guessedWord: updatedGuessedWord));
-    }
-
-    _column--;
-
     emit(state.copyWith(
       guessedWord: updatedGuessedWord,
       isValid: false,
