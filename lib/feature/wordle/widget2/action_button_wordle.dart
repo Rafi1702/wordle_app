@@ -14,7 +14,7 @@ class ActionButtonsWordle extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<WordleCubit, WordleState>(
       buildWhen: (previous, current) =>
-          previous.isStageCompleted != current.isStageCompleted ||
+          // previous.isStageCompleted != current.isStageCompleted ||
           previous.wordFactStatus != current.wordFactStatus ||
           previous.isValid != current.isValid ||
           previous.hintLimit != current.hintLimit,

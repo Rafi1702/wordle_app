@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tebak_kata/domain/models/word_fact.dart';
@@ -8,6 +9,7 @@ import 'package:tebak_kata/domain/repository/wordle_repository.dart';
 part 'wordle_state.dart';
 
 class WordleCubit extends Cubit<WordleState> {
+  /* private state */
   final Random _random = Random();
   int _column = 0;
   int _row = 0;
@@ -25,9 +27,10 @@ class WordleCubit extends Cubit<WordleState> {
       List<List<CharacterModels>> updatedGuessedWord = [];
       final data = await wordleRepository.getRandomWord();
 
-      _wordsData = List.from(data);
+      _wordsData = List.from(data.map((e) => e.toUpperCase()).toList());
 
       _word = _wordsData[_random.nextInt(_wordsData.length)];
+      debugPrint(_word);
       for (int i = 0; i < _word.length; i++) {
         updatedHintWord.add(' ');
         _tempWords.add(i);
@@ -74,10 +77,12 @@ class WordleCubit extends Cubit<WordleState> {
   }
 
   void onWordChanged(String character) {
+    emit(state.copyWith(isWordAvailable: true));
+
     int length = state.guessedWord[_row].length - 1;
 
     if (state.guessedWord[_row][length].character != null && state.isValid) {
-      return emit(state);
+      return;
     }
     final updatedGuessedWord = List.generate(
       state.guessedWord.length,
@@ -98,14 +103,12 @@ class WordleCubit extends Cubit<WordleState> {
     _column++;
 
     if (_column == _word.length) {
-      _column = _word.length - 1;
       return emit(
           state.copyWith(isValid: true, guessedWord: updatedGuessedWord));
     }
 
     emit(
       state.copyWith(
-        isWordAvailable: true,
         guessedWord: updatedGuessedWord,
       ),
     );
@@ -117,8 +120,9 @@ class WordleCubit extends Cubit<WordleState> {
 
     final updatedIsWordsAvailable = _wordsData.contains(concattedCharacter);
 
+    emit(state.copyWith(isWordAvailable: updatedIsWordsAvailable));
     //Stop when _isWordsAvailable false, it wont go to next row
-    if (updatedIsWordsAvailable) {
+    if (!state.isWordAvailable) {
       return;
     }
 
@@ -126,13 +130,12 @@ class WordleCubit extends Cubit<WordleState> {
         changeCharacterStatus(state.guessedWord, _row, _wordOccurences);
 
     final updatedIsStageCompleted =
-        isComplete(state.guessedWord[_row], _word, _tried, _row);
+        isComplete(updatedGuessedWord[_row], _word, _tried, _row);
 
     /* _isValid depends on _isStageCompleted, if stage is not completed yet, isValid should be false*/
     final updatedIsValid = updatedIsStageCompleted;
 
     /* need to refresh _wordOccurences value for next submit */
-
     _wordOccurences = countWordOccurences(_word);
 
     _row++;
@@ -140,21 +143,15 @@ class WordleCubit extends Cubit<WordleState> {
 
     emit(
       state.copyWith(
+          isStageCompleted: updatedIsStageCompleted,
           isWordAvailable: updatedIsWordsAvailable,
           guessedWord: updatedGuessedWord,
           isValid: updatedIsValid),
     );
-
-    // if (_isStageCompleted) {
-    //   await getWordFacts();
-    // }
   }
 
   void onDeleteCharacter() {
-    if (_column <= 0) {
-      return;
-    }
-    _column--;
+    emit(state.copyWith(isWordAvailable: true));
     final updatedGuessedWord = List.generate(
       state.guessedWord.length,
       (row) {
@@ -170,9 +167,15 @@ class WordleCubit extends Cubit<WordleState> {
         );
       },
     );
+    if (_column <= 0) {
+      _column = 0;
+
+      return emit(state.copyWith(guessedWord: updatedGuessedWord));
+    }
+
+    _column--;
 
     emit(state.copyWith(
-      isWordAvailable: true,
       guessedWord: updatedGuessedWord,
       isValid: false,
     ));
@@ -180,6 +183,7 @@ class WordleCubit extends Cubit<WordleState> {
 
   void onHintButton() async {
     if (state.hintLimit <= 0) {
+      emit(state.copyWith(hintLimit: -1));
       return;
     }
     final generateRandomIndex = _tempWords[_random.nextInt(_tempWords.length)];
@@ -193,15 +197,20 @@ class WordleCubit extends Cubit<WordleState> {
     _tempWords.remove(generateRandomIndex);
 
     final updatedHintLimit = state.hintLimit - 1;
+    debugPrint(updatedHintLimit.toString());
 
     emit(
         state.copyWith(hintWord: updatedHintWord, hintLimit: updatedHintLimit));
   }
 
   void onGiveUpButton() async {
-    // _isStageCompleted = true;
-    // await getWordFacts();
-    emit(state.copyWith(isStageCompleted: true));
+    final updatedHint = _word.split('');
+    emit(
+      state.copyWith(
+        isStageCompleted: true,
+        hintWord: updatedHint,
+      ),
+    );
   }
 
   /* Helper Function*/
