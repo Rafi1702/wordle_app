@@ -16,7 +16,6 @@ class WordlePage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      print('rebuild mulu');
       return MultiBlocListener(
         listeners: [
           BlocListener<WordleCubit, WordleState>(
@@ -36,15 +35,16 @@ class WordlePage2 extends StatelessWidget {
             },
           ),
           BlocListener<WordleCubit, WordleState>(
-            listenWhen: (prev, current) => prev.hintLimit!=current.hintLimit,
+            listenWhen: (prev, current) => prev.hintLimit != current.hintLimit,
             listener: (context, state) {
               final cubit = context.read<WordleCubit>();
-              if (state.hintLimit <= 0) {
+              if (state.hintLimit < 0) {
                 showDialog(
-                    context: context,
-                    builder: (context) {
-                      return _GiveUpAlert(cubit);
-                    });
+                  context: context,
+                  builder: (context) {
+                    return _GiveUpAlert(cubit);
+                  },
+                );
               }
             },
           ),
@@ -127,7 +127,7 @@ class _GiveUpAlert extends StatelessWidget {
       child: AlertDialog(
         actions: [
           TextButton(
-            child: Text('Yes'),
+            child: const Text('Yes'),
             onPressed: () {
               cubit.onGiveUpButton();
               Navigator.of(context).pop();

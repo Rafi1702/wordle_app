@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tebak_kata/feature/settings/providers/settings_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:tebak_kata/feature/settings/cubit/settings_cubit.dart';
+
 
 import 'package:tebak_kata/helper/app_theme.dart';
 
@@ -16,8 +18,8 @@ class SettingsDialog extends StatelessWidget {
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Consumer<SettingsProvider>(
-          builder: (context, settingState, child) {
+        child: BlocBuilder<SettingsCubit, SettingsState>(
+          builder: (context, state) {
             return Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -33,16 +35,16 @@ class SettingsDialog extends StatelessWidget {
                   ),
                   child: Slider(
                       max: 0.05,
-                      value: settingState.volume,
+                      value: state.volume,
                       onChanged: (double _) =>
-                          context.read<SettingsProvider>().onVolumeChange(_)),
+                          context.read<SettingsCubit>().onVolumeChange(_)),
                 ),
                 Row(
                   children: [
                     Checkbox(
-                        value: settingState.isBgmActive,
+                        value: state.isBgmMute,
                         onChanged: (_) {
-                          context.read<SettingsProvider>().onBgmCheckBoxTap();
+                          context.read<SettingsCubit>().onBgmCheckBoxTap();
                         }),
                     const Text('BGM')
                   ],
@@ -55,7 +57,7 @@ class SettingsDialog extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         context
-                            .read<SettingsProvider>()
+                            .read<SettingsCubit>()
                             .onThemeChange(Themes.sakuraTheme);
                       },
                       child: CustomPaint(
@@ -68,15 +70,14 @@ class SettingsDialog extends StatelessWidget {
                                 AppTheme.sakuraTheme.colorScheme.primary,
                             circleColor2:
                                 AppTheme.sakuraTheme.colorScheme.secondary,
-                            isSelected: settingState.selectedTheme ==
-                                Themes.sakuraTheme),
+                            isSelected: state.theme == Themes.sakuraTheme),
                       ),
                     ),
                     const SizedBox(width: 10.0),
                     GestureDetector(
                       onTap: () {
                         context
-                            .read<SettingsProvider>()
+                            .read<SettingsCubit>()
                             .onThemeChange(Themes.blueTheme);
                       },
                       child: CustomPaint(
@@ -89,8 +90,7 @@ class SettingsDialog extends StatelessWidget {
                                 AppTheme.blueTheme.colorScheme.primary,
                             circleColor2:
                                 AppTheme.blueTheme.colorScheme.surface,
-                            isSelected:
-                                settingState.selectedTheme == Themes.blueTheme),
+                            isSelected: state.theme == Themes.blueTheme),
                       ),
                     )
                   ],
@@ -162,5 +162,3 @@ class DiagonalSplitCirclePainter extends CustomPainter {
     return false;
   }
 }
-
-

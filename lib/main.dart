@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tebak_kata/data/local/audio_local_storage.dart';
 import 'package:tebak_kata/data/remote/facts_word_remote.dart';
@@ -8,13 +8,13 @@ import 'package:tebak_kata/data/local/random_word_remote.dart';
 import 'package:tebak_kata/data/local/theme_local_storage.dart';
 import 'package:tebak_kata/domain/repository/settings_repository.dart';
 import 'package:tebak_kata/domain/repository/wordle_repository.dart';
+import 'package:tebak_kata/feature/settings/cubit/settings_cubit.dart';
 import 'package:tebak_kata/feature/wordle/cubit/wordle_cubit.dart';
 import 'package:tebak_kata/feature/wordle/presentation/fact_words_page.dart';
 import 'package:tebak_kata/feature/wordle/presentation/wordle_page.dart';
 
 import 'package:tebak_kata/helper/app_theme.dart';
 
-import 'package:tebak_kata/feature/settings/providers/settings_provider.dart';
 import 'package:tebak_kata/home_page.dart';
 
 const themeKey = "__theme__";
@@ -38,14 +38,14 @@ void main() async {
       pref: prefsWithCache, volumeKey: volumeKey, bgmKey: bgmKey);
 
   runApp(
-    MultiProvider(
+    MultiRepositoryProvider(
       providers: [
-        Provider(
+        RepositoryProvider(
           create: (context) => WordleRepository(
               randomWordRemote: randomWordRemote,
               factsWordRemote: factWordRemote),
         ),
-        Provider(
+        RepositoryProvider(
           create: (context) => SettingsRepository(
             themeLocalStorage: themeLocalStorage,
             audioLocalStorage: audioLocalStorage,
@@ -63,15 +63,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      lazy: false,
-      create: (BuildContext context) {
-        return SettingsProvider(
+    return BlocProvider<SettingsCubit>(
+      create: (context) {
+        return SettingsCubit(
             settingsRepository: context.read<SettingsRepository>());
       },
-      child: Selector<SettingsProvider, Themes>(
-          selector: (_, settingsProvider) => settingsProvider.selectedTheme,
-          builder: (context, state, child) {
+      child: BlocSelector<SettingsCubit, SettingsState, Themes>(
+          selector: (state) => state.theme,
+          builder: (context, state) {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
               theme: state.getThemeData,
