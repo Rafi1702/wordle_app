@@ -32,7 +32,7 @@ class FactWordsPage extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(wordFacts[wordFactsIndex].phonetic,
+                      Text( 'Not Available',
                           style: titleTextStyle),
                       IconButton(
                         icon: const Icon(Icons.volume_up),

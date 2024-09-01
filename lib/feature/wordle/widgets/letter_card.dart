@@ -14,6 +14,7 @@ class LetterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width / 6;
     final height = MediaQuery.sizeOf(context).height / 12;
+    // log(MediaQuery.sizeOf(context).width.toString());
     return SizedBox(
       height: height,
       width: width,

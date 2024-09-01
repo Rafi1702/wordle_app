@@ -15,7 +15,8 @@ class ActionButtonsWordle extends StatelessWidget {
     return Builder(builder: (context) {
       final isStageCompleted = context.select(
           (WordleProvider wordleProvider) => wordleProvider.isStageCompleted);
-
+      final wordFactStatus = context.select(
+          (WordleProvider wordleProvider) => wordleProvider.wordFactStatus);
       final isValid = context
           .select((WordleProvider wordleProvider) => wordleProvider.isValid);
       final hintMax = context
@@ -36,12 +37,15 @@ class ActionButtonsWordle extends StatelessWidget {
               )),
               onPressed: isValid
                   ? isStageCompleted
-                      ? () => Navigator.of(context).pushReplacementNamed(WordlePage.route)
+                      ? () => Navigator.of(context)
+                          .pushReplacementNamed(WordlePage.route)
                       : () {
                           context.read<WordleProvider>().onSubmitButton();
                         }
                   : null,
-              child: Text(isStageCompleted ? 'Next' : 'Submit')),
+              child: wordFactStatus == WordleStatus.loading
+                  ? const CircularProgressIndicator()
+                  : Text(isStageCompleted ? 'Next' : 'Submit')),
           const Spacer(),
           ElevatedButton(
             style: const ButtonStyle(
@@ -49,13 +53,13 @@ class ActionButtonsWordle extends StatelessWidget {
                 CircleBorder(),
               ),
             ),
-            onPressed: hintMax == 0
+            onPressed: hintMax < 0
                 ? null
                 : () {
-                    context.read<WordleProvider>().onHintTextTap();
+                    context.read<WordleProvider>().onHintButton();
                   },
-            child: Icon(Icons.lightbulb_rounded,
-                color: hintMax == 0 ? null : Colors.yellow, size: 30.0),
+            child: Icon(hintMax == 0 ? Icons.flag : Icons.lightbulb_rounded,
+                color: hintMax == 0 ? Colors.white : Colors.yellow, size: 30.0),
           )
         ],
       );

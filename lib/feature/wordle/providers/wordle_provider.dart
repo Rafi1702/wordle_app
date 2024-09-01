@@ -174,8 +174,6 @@ class WordleProvider with ChangeNotifier {
     _column = 0;
 
     if (_isStageCompleted) {
-      _hintMax = 0;
-      _hintWord = _word.split('');
       await getWordFacts();
     }
 
@@ -209,7 +207,13 @@ class WordleProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void onHintTextTap() {
+  void onHintButton() async{
+    if (hintMax <= 0) {
+      _isStageCompleted = true;
+      await getWordFacts();
+      notifyListeners();
+      return;
+    }
     final generateRandomIndex = _tempWords[_random.nextInt(_tempWords.length)];
 
     _hintWord = List.generate(
@@ -232,6 +236,8 @@ class WordleProvider with ChangeNotifier {
       final data = await wordleRepo.getWordFact(_word);
       _wordFact = data;
       _wordFactError = "";
+      _hintMax = -1;
+      _hintWord = _word.split('');
       _wordFactStatus = WordleStatus.success;
       notifyListeners();
     } catch (e) {

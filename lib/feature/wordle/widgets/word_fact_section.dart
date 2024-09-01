@@ -57,7 +57,7 @@ class BottomSection extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text(wordFact.first.phonetic, style: titleTextStyle),
+                          Text("Not Available", style: titleTextStyle),
                           IconButton(
                             icon: Icon(
                               Icons.volume_up,

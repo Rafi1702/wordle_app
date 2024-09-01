@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -71,6 +73,8 @@ class _WordlePageState extends State<WordlePage> {
           selector: (_, state) => state.wordStatus,
           shouldRebuild: (prev, current) => prev != current,
           builder: (context, status, __) => Builder(builder: (context) {
+            log(MediaQuery.sizeOf(context).height.toString());
+            log(MediaQuery.sizeOf(context).width.toString());
             switch (status) {
               case WordleStatus.initial:
                 return Center(
