@@ -29,7 +29,8 @@ class BottomSection extends StatelessWidget {
           previous.wordFactError != current.wordFactError ||
           previous.isStageCompleted != current.isStageCompleted,
       builder: (context, state) {
-        if (state.isStageCompleted) {
+        if (state.isStageCompleted && state.wordFact.isNotEmpty) {
+          final phonetics = state.wordFact.first.phonetics;
           switch (state.wordFactStatus) {
             case WordlePageStatus.loading:
               return const Center(
@@ -55,7 +56,10 @@ class BottomSection extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text(state.wordFact.first.phonetics.first.text ?? '',
+                          Text(
+                              phonetics.isNotEmpty
+                                  ? phonetics[0].text ?? ''
+                                  : 'Unavailable',
                               style: titleTextStyle),
                           IconButton(
                             icon: Icon(

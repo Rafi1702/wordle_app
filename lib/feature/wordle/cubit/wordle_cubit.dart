@@ -24,7 +24,6 @@ class CharacterModels {
 }
 
 class WordleCubit extends Cubit<WordleState> {
-
   /* private state */
   final Random _random = Random();
   int _column = 0;
@@ -46,8 +45,7 @@ class WordleCubit extends Cubit<WordleState> {
 
       _wordsData = List.from(data.map((e) => e.toUpperCase()).toList());
 
-      // _word = _wordsData[_random.nextInt(_wordsData.length)];
-      _word = "SCOWL";
+      _word = _wordsData[_random.nextInt(_wordsData.length)];
 
       for (int i = 0; i < _word.length; i++) {
         updatedHintWord.add(' ');
