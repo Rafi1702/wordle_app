@@ -38,8 +38,8 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> onVolumeChange(double value) async {
     await Future.wait(
       [
-        _audioPlayer.setVolume(state.volume),
-        settingsRepository.setVolume(state.volume),
+        _audioPlayer.setVolume(value),
+        settingsRepository.setVolume(value),
       ],
     );
     emit(state.copyWith(volume: value));
@@ -53,7 +53,7 @@ class SettingsCubit extends Cubit<SettingsState> {
         state.isBgmMute
             ? _audioPlayer.setVolume(state.volume)
             : _audioPlayer.setVolume(0),
-        settingsRepository.setBgmValue(state.isBgmMute),
+        settingsRepository.setBgmValue(isBgmMute),
       ],
     );
     emit(state.copyWith(isBgmMute: isBgmMute));

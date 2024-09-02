@@ -66,7 +66,8 @@ class MyApp extends StatelessWidget {
     return BlocProvider<SettingsCubit>(
       create: (context) {
         return SettingsCubit(
-            settingsRepository: context.read<SettingsRepository>());
+          settingsRepository: context.read<SettingsRepository>(),
+        )..initialSettings();
       },
       child: BlocSelector<SettingsCubit, SettingsState, Themes>(
           selector: (state) => state.theme,

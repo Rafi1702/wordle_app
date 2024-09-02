@@ -214,6 +214,7 @@ class WordleCubit extends Cubit<WordleState> {
       state.copyWith(
         isStageCompleted: true,
         hintWord: updatedHint,
+        isValid: true,
       ),
     );
   }
