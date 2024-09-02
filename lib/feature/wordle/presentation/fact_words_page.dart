@@ -27,12 +27,18 @@ class FactWordsPage extends StatelessWidget {
               return const Divider();
             },
             itemBuilder: (context, wordFactsIndex) {
+              List<Phonetic> phonetics = wordFacts[wordFactsIndex].phonetics;
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text('Word ${wordFactsIndex + 1}'),
                   Row(
                     children: [
-                      Text( 'Not Available',
+                      Text(
+                          phonetics.isNotEmpty
+                              ? phonetics.first.text ?? ''
+                              : 'Unavailable',
                           style: titleTextStyle),
                       IconButton(
                         icon: const Icon(Icons.volume_up),
@@ -46,30 +52,40 @@ class FactWordsPage extends StatelessWidget {
                       return Chip(label: Text(e.partOfSpeech));
                     }).toList(),
                   ),
-                  ...wordFacts[wordFactsIndex].meanings.map(
-                    (e) {
-                      return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Meanings'),
-                            const SizedBox(height: 4.0),
-                            ...e.definitions.asMap().entries.map((e) {
-                              return Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('${e.key + 1}. '),
-                                  Expanded(
-                                    child: Text(
-                                      e.value.definition,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }),
-                            const SizedBox(height: 8.0),
-                          ]);
-                    },
-                  ),
+                  ExpansionTile(
+                    title: const Text('Meanings'),
+                    children:
+                        wordFacts[wordFactsIndex].meanings.asMap().entries.map(
+                      (entry) {
+                        return ListTile(
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Meanings ${entry.key + 1}'),
+                              const SizedBox(height: 4.0),
+                              ...entry.value.definitions.asMap().entries.map(
+                                (e) {
+                                  return Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('${e.key + 1}. '),
+                                      Expanded(
+                                        child: Text(
+                                          e.value.definition,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 8.0),
+                            ],
+                          ),
+                        );
+                      },
+                    ).toList(),
+                  )
                 ],
               );
             },

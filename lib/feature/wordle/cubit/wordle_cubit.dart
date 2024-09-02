@@ -8,7 +8,23 @@ import 'package:tebak_kata/domain/repository/wordle_repository.dart';
 
 part 'wordle_state.dart';
 
+enum CharacterStatus { exist, existDifferentIndex, notExist }
+
+class CharacterModels {
+  final String? character;
+
+  final CharacterStatus? status;
+
+  const CharacterModels({this.character, this.status});
+
+  CharacterModels copyWith({String? character, CharacterStatus? status}) =>
+      CharacterModels(
+          character: character ?? this.character,
+          status: status ?? this.status);
+}
+
 class WordleCubit extends Cubit<WordleState> {
+
   /* private state */
   final Random _random = Random();
   int _column = 0;
@@ -21,6 +37,7 @@ class WordleCubit extends Cubit<WordleState> {
 
   WordleCubit({required this.wordleRepository}) : super(const WordleState());
   final WordleRepository wordleRepository;
+
   Future<void> getWord() async {
     try {
       List<String> updatedHintWord = [];
@@ -29,8 +46,9 @@ class WordleCubit extends Cubit<WordleState> {
 
       _wordsData = List.from(data.map((e) => e.toUpperCase()).toList());
 
-      _word = _wordsData[_random.nextInt(_wordsData.length)];
-      debugPrint(_word);
+      // _word = _wordsData[_random.nextInt(_wordsData.length)];
+      _word = "SCOWL";
+
       for (int i = 0; i < _word.length; i++) {
         updatedHintWord.add(' ');
         _tempWords.add(i);
@@ -185,8 +203,6 @@ class WordleCubit extends Cubit<WordleState> {
   }
 
   void onHintButton() async {
-    // final condition = state.hintLimit < 0;
-
     final updatedHintLimit = state.hintLimit - 1;
     if (updatedHintLimit < 0) {
       return emit(state.copyWith(hintLimit: updatedHintLimit));
@@ -279,19 +295,4 @@ class WordleCubit extends Cubit<WordleState> {
 
     return temp;
   }
-}
-
-enum CharacterStatus { exist, existDifferentIndex, notExist }
-
-class CharacterModels {
-  final String? character;
-
-  final CharacterStatus? status;
-
-  const CharacterModels({this.character, this.status});
-
-  CharacterModels copyWith({String? character, CharacterStatus? status}) =>
-      CharacterModels(
-          character: character ?? this.character,
-          status: status ?? this.status);
 }

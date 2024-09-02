@@ -6,8 +6,6 @@ import 'package:tebak_kata/feature/wordle/cubit/wordle_cubit.dart';
 import 'package:tebak_kata/feature/wordle/presentation/fact_words_page.dart';
 import 'package:tebak_kata/feature/wordle/widget/keyboard.dart';
 
-
-
 class BottomSection extends StatelessWidget {
   const BottomSection({
     super.key,
@@ -57,7 +55,8 @@ class BottomSection extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text("Not Available", style: titleTextStyle),
+                          Text(state.wordFact.first.phonetics.first.text ?? '',
+                              style: titleTextStyle),
                           IconButton(
                             icon: Icon(
                               Icons.volume_up,
