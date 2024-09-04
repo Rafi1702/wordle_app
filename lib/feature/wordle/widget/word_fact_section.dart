@@ -29,14 +29,14 @@ class BottomSection extends StatelessWidget {
           previous.wordFactError != current.wordFactError ||
           previous.isStageCompleted != current.isStageCompleted,
       builder: (context, state) {
-        if (state.isStageCompleted && state.wordFact.isNotEmpty) {
-          final phonetics = state.wordFact.first.phonetics;
+        if (state.isStageCompleted) {
           switch (state.wordFactStatus) {
             case WordlePageStatus.loading:
               return const Center(
                 child: CircularProgressIndicator(),
               );
             case WordlePageStatus.success:
+              final phonetics = state.wordFact.first.phonetics;
               return GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushNamed(FactWordsPage.route,
@@ -58,7 +58,7 @@ class BottomSection extends StatelessWidget {
                         children: [
                           Text(
                               phonetics.isNotEmpty
-                                  ? phonetics[0].text ?? ''
+                                  ? phonetics.first.text ?? ''
                                   : 'Unavailable',
                               style: titleTextStyle),
                           IconButton(

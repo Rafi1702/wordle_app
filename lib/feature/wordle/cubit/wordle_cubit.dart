@@ -33,6 +33,7 @@ class WordleCubit extends Cubit<WordleState> {
   final List<int> _tempWords = [];
   List<String> _wordsData = [];
   String _word = '';
+  int _hintLimit = 2;
 
   WordleCubit({required this.wordleRepository}) : super(const WordleState());
   final WordleRepository wordleRepository;
@@ -201,9 +202,11 @@ class WordleCubit extends Cubit<WordleState> {
   }
 
   void onHintButton() async {
-    final updatedHintLimit = state.hintLimit - 1;
+    final updatedHintLimit = _hintLimit - 1;
+    emit(state.copyWith(isHintAvailable: true));
+
     if (updatedHintLimit < 0) {
-      return emit(state.copyWith(hintLimit: updatedHintLimit));
+      return emit(state.copyWith(isHintAvailable: false));
     }
 
     final generateRandomIndex = _tempWords[_random.nextInt(_tempWords.length)];

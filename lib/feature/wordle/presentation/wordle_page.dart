@@ -9,9 +9,23 @@ import 'package:tebak_kata/feature/wordle/widget/guessed_words_grid.dart';
 import 'package:tebak_kata/feature/wordle/widget/hint_word_section.dart';
 import 'package:tebak_kata/feature/wordle/widget/word_fact_section.dart';
 
-class WordlePage2 extends StatelessWidget {
+class WordlePage2 extends StatefulWidget {
   static const route = '/wordle_page2';
   const WordlePage2({super.key});
+
+  @override
+  State<WordlePage2> createState() => _WordlePage2State();
+}
+
+class _WordlePage2State extends State<WordlePage2> {
+  late WordleCubit wordleCubit;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    wordleCubit = context.read<WordleCubit>();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +49,14 @@ class WordlePage2 extends StatelessWidget {
             },
           ),
           BlocListener<WordleCubit, WordleState>(
-            listenWhen: (prev, current) => prev.hintLimit != current.hintLimit,
+            listenWhen: (prev, current) =>
+                prev.isHintAvailable || current.isHintAvailable,
             listener: (context, state) {
-              final cubit = context.read<WordleCubit>();
-              if (state.hintLimit < 0) {
+              if (!state.isHintAvailable) {
                 showDialog(
                   context: context,
                   builder: (context) {
-                    return _GiveUpAlert(cubit);
+                    return _GiveUpAlert(wordleCubit);
                   },
                 );
               }

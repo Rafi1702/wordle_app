@@ -9,12 +9,12 @@ class WordleState extends Equatable {
     this.isValid = false,
     this.isStageCompleted = false,
     this.isWordAvailable = true,
-    this.hintLimit = 2,
     this.guessedWord = const [],
     this.randomWordError = '',
     this.hintWord = const [],
     this.wordFactError = '',
     this.wordFact = const [],
+    this.isHintAvailable = true,
   });
 
   WordleState copyWith({
@@ -37,29 +37,29 @@ class WordleState extends Equatable {
         isValid: isValid ?? this.isValid,
         isStageCompleted: isStageCompleted ?? this.isStageCompleted,
         isWordAvailable: isWordAvailable ?? this.isWordAvailable,
-        hintLimit: hintLimit ?? this.hintLimit,
         guessedWord: guessedWord ?? this.guessedWord,
         randomWordError: randomWordError ?? this.randomWordError,
         hintWord: hintWord ?? this.hintWord,
         wordFactError: wordFactError ?? this.wordFactError,
         wordFact: wordFact ?? this.wordFact,
+        isHintAvailable: isHintAvailable ?? this.isHintAvailable,
       );
 
   final WordlePageStatus wordFactStatus;
   final WordlePageStatus randomWordStatus;
   final List<List<CharacterModels>> guessedWord;
   final bool isValid;
-  final int hintLimit;
+
   final bool isStageCompleted;
   final bool isWordAvailable;
   final List<String> hintWord;
   final String randomWordError;
   final String wordFactError;
   final List<WordFact> wordFact;
+  final bool isHintAvailable;
 
   @override
   List<Object> get props => [
-        hintLimit,
         wordFactStatus,
         randomWordStatus,
         guessedWord,
@@ -70,5 +70,6 @@ class WordleState extends Equatable {
         randomWordError,
         wordFactError,
         wordFact,
+        isHintAvailable,
       ];
 }

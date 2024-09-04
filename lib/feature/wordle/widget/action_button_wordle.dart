@@ -13,10 +13,9 @@ class ActionButtonsWordle extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<WordleCubit, WordleState>(
       buildWhen: (previous, current) =>
-          // previous.isStageCompleted != current.isStageCompleted ||
           previous.wordFactStatus != current.wordFactStatus ||
           previous.isValid != current.isValid ||
-          previous.hintLimit != current.hintLimit,
+          previous.isHintAvailable != current.isHintAvailable,
       builder: (context, state) {
         return Row(
           children: [
@@ -64,8 +63,8 @@ class ActionButtonsWordle extends StatelessWidget {
                       context.read<WordleCubit>().onHintButton();
                     },
               child: Icon(
-                  state.hintLimit <= 0 ? Icons.flag : Icons.lightbulb_rounded,
-                  color: state.hintLimit <= 0 ? Colors.white : Colors.yellow,
+                  !state.isHintAvailable ? Icons.flag : Icons.lightbulb_rounded,
+                  color: !state.isHintAvailable ? Colors.white : Colors.yellow,
                   size: 30.0),
             )
           ],
